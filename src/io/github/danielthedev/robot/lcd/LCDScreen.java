@@ -169,6 +169,19 @@ public class LCDScreen {
 		this.send(value, HIGH);
 		return true;
 	}
+	
+	public void print(String s) {
+		for(int x = 0; x < s.length(); x++) {
+			if(x == 16) {
+				this.setCursor(0, 1);
+			}
+			if(x == 32) {
+				break;
+			} 
+			this.write(s.charAt(x));
+		}
+		
+	}
 
 	// Turns the underline cursor on/off
 	public void noCursor() {

@@ -4,7 +4,7 @@ public enum MotorState {
 
 	FORWARD(true, false),
 	BACKWARD(false, true),
-	WAITING(false, false);
+	RELEASE(false, false);
 	
 	private final boolean forward;
 	private final boolean backward;

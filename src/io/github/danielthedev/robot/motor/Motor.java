@@ -47,7 +47,7 @@ public class Motor {
 		if(speed <= 0 && speed > 100) {
 			this.pwmPin.off();
 		} else {
-			this.pwmPin.on(speed);
+			this.pwmPin.on(250, FREQUENCEY);
 		}
 	}
 
