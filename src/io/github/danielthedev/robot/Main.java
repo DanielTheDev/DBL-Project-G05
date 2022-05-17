@@ -3,6 +3,9 @@ package io.github.danielthedev.robot;
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 
+import io.github.danielthedev.robot.arduino.Arduino;
+import io.github.danielthedev.robot.arduino.ArduinoListener;
+import io.github.danielthedev.robot.arduino.DiskType;
 import io.github.danielthedev.robot.lcd.LCDScreen;
 import io.github.danielthedev.robot.motor.Motor;
 import io.github.danielthedev.robot.motor.MotorController;
@@ -24,6 +27,8 @@ public class Main {
     private static final Pin PIN_MOTOR_1 = new Pin("motor-1", GPIO_8, "D11");
     private static final Pin PIN_MOTOR_2 = new Pin("motor-2", GPIO_7, "D3");  
     
+    private static final Pin PIN_ARDUINO_CLOCK = new Pin("arduino-clock", GPIO_27);
+    private static final Pin PIN_ARDUINO_DATA = new Pin("arduino-data", GPIO_17);
     
     private static final Pin PIN_LCD_RS = new Pin("rs", GPIO_5);
     private static final Pin PIN_LCD_ENABLE = new Pin("enable", GPIO_6);
@@ -41,15 +46,31 @@ public class Main {
         //Motor motor1 = new Motor(pi4j, motorController, MotorType.MOTOR_1, PIN_MOTOR_1);
         //Motor motor2 = new Motor(pi4j, motorController, MotorType.MOTOR_2, PIN_MOTOR_2);
         
-        LCDScreen lcd = new LCDScreen(pi4j, PIN_LCD_RS, PIN_LCD_ENABLE, PIN_LCD_D4, PIN_LCD_D5, PIN_LCD_D6, PIN_LCD_D7);
-        lcd.begin(16, 2, 0);
+        //LCDScreen lcd = new LCDScreen(pi4j, PIN_LCD_RS, PIN_LCD_ENABLE, PIN_LCD_D4, PIN_LCD_D5, PIN_LCD_D6, PIN_LCD_D7);
+        //lcd.begin(16, 2, 0);
+        //String s =  "Welcome to the strawberry pi    ";
+        //lcd.print(s);
         
-        String s =  "Welcome to the strawberry pi    ";
-        lcd.print(s);
+        Arduino arduino = new Arduino(pi4j, PIN_ARDUINO_CLOCK, PIN_ARDUINO_DATA, new ArduinoListener() {
+			
+			@Override
+			public void onItemRead(DiskType type) {
+				System.out.println("Read: " + type);	
+			}
+			
+			@Override
+			public void onItemDetect() {
+				System.out.println("Detect");
+			}
+			
+			@Override
+			public void onFailure() {
+				System.out.println("Error");				
+			}
+		});
+        arduino.enable();
         
-        
-        
-        Thread.sleep(5000);
+        Thread.sleep(20000);
         
         
         pi4j.shutdown();
