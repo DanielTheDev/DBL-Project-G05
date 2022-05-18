@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+	<Properties>
+		<Property name="LOG_PATTERN">[%d{HH:mm:ss}] [%t/%level]: %msg{nolookups}%n</Property>
+	</Properties>
+	<Appenders>
+		<RollingRandomAccessFile name="File" fileName="logs/runtime/latest.log" filePattern="logs/runtime/%d{yyyy-MM-dd}-%i.log.gz">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<OnStartupTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy max="1000" />
+		</RollingRandomAccessFile>
+		<RollingRandomAccessFile name="RobotFile" fileName="logs/robot/latest.log" filePattern="logs/robot/%d{yyyy-MM-dd}-%i.log.gz">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<OnStartupTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy max="1000" />
+		</RollingRandomAccessFile>
+		<Console name="Console" target="SYSTEM_ERR" follow="true">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Logger name="io.github.danielthedev.robot" additivity="false">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="RobotFile" />
+			<AppenderRef ref="File" />
+		</Logger>
+		<Root level="all">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="File" />
+		</Root>
+	</Loggers>
+</Configuration>

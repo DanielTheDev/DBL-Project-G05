@@ -9,13 +9,13 @@ import io.github.danielthedev.robot.PinFactory;
 
 public class Motor {
 
-	private static final int FREQUENCEY = 39000;
+	public static final int FREQUENCEY = 39000;
 	
-	private final MotorType type;
-	private final MotorController controller; 
-	private final Pwm pwmPin;
-	private MotorState state;
-	private int speed;
+	public final MotorType type;
+	public final MotorController controller; 
+	public final Pwm pwmPin;
+	public MotorState state;
+	public int speed;
 	
 	public Motor(Context context, MotorController controller, MotorType type, Pin pwnPin) {
 		this.type = type;

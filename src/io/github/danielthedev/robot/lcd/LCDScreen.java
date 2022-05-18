@@ -157,7 +157,7 @@ public class LCDScreen {
 		this.delayMicroseconds(2000); // this command takes a long time!
 	}
 
-	private void delayMicroseconds(int microseconds) {
+	public void delayMicroseconds(int microseconds) {
 		PIGPIO.gpioDelay(microseconds);
 	}
 
@@ -262,7 +262,7 @@ public class LCDScreen {
 		this.write4bits(value);
 	}
 
-	public void write4bits(int value) {
+	private void write4bits(int value) {
 		for (int i = 0; i < 4; i++) {
 			if (((value >> i) & 0x01) == 1) {
 				this.data_pins[i].high();
@@ -274,7 +274,7 @@ public class LCDScreen {
 		this.pulseEnable();
 	}
 
-	public void pulseEnable() {
+	private void pulseEnable() {
 		this.enable_pin.low();
 		this.delayMicroseconds(1);
 		this.enable_pin.high();

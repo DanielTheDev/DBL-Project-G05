@@ -11,7 +11,7 @@ public enum MotorType {
 	private final int motorBitPosBackward;
 	private final int motorID;
 
-	private MotorType(int motorID, int motorBitPosForward, int motorBitPosBackward) {
+	MotorType(int motorID, int motorBitPosForward, int motorBitPosBackward) {
 		this.motorID = motorID;
 		this.motorBitPosForward = motorBitPosForward;
 		this.motorBitPosBackward = motorBitPosBackward;

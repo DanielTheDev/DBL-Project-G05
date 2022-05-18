@@ -9,7 +9,7 @@ public enum MotorState {
 	private final boolean forward;
 	private final boolean backward;
 	
-	private MotorState(boolean forward, boolean backward) {
+	MotorState(boolean forward, boolean backward) {
 		this.forward = forward;
 		this.backward = backward;
 	}

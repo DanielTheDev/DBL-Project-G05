@@ -49,7 +49,7 @@ public class Arduino implements DigitalStateChangeListener {
 		}
 	}
 
-	private void executeCommand() {
+	public void executeCommand() {
 		int opcode = this.buffer & 0b00000011;
 		ArduinoCommandType command = ArduinoCommandType.getCommandType(opcode);
 		switch (command) {

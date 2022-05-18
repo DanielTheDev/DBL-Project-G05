@@ -10,13 +10,13 @@ import io.github.danielthedev.robot.PinFactory;
 
 public class MotorController {
 	
-	private final DigitalOutput latchPin;
-	private final DigitalOutput dataPin;
-	private final DigitalOutput clockPin;
-	private final DigitalOutput enablePin;
+	public final DigitalOutput latchPin;
+	public final DigitalOutput dataPin;
+	public final DigitalOutput clockPin;
+	public final DigitalOutput enablePin;
 	
 	//bitmask of the latches values
-	private int latchState = 0;
+	public int latchState = 0;
 	
 	public MotorController(Context context, Pin latchPin, Pin dataPin, Pin clockPin, Pin enablePin) {
 		this.latchPin = PinFactory.createOutputPin(context, latchPin, "MC");
@@ -25,7 +25,7 @@ public class MotorController {
 		this.enablePin = PinFactory.createOutputPin(context, enablePin, "MC");
 	}
 	
-	private void latch() {
+	public void latch() {
 		this.latchPin.low();
 		this.dataPin.low();
 		
@@ -50,7 +50,7 @@ public class MotorController {
 	
 
 	
-	private void delayMicroseconds(int microseconds) {
+	public void delayMicroseconds(int microseconds) {
 		PIGPIO.gpioDelay(microseconds);
 	}
 

@@ -9,7 +9,7 @@ public enum ArduinoCommandType {
 	
 	private final int opcode;
 
-	private ArduinoCommandType(int opcode) {
+	ArduinoCommandType(int opcode) {
 		this.opcode = opcode;
 	}
 
