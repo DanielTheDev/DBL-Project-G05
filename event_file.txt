@@ -1,0 +1,12 @@
+18/05/2022 12:19:05: Idle
+18/05/2022 12:19:10: Extending Arm
+18/05/2022 12:19:15: Retrieving Disk
+18/05/2022 12:19:20: Extending Arm
+18/05/2022 12:19:25: Storing Black Disk
+18/05/2022 12:19:31: Checking Color
+18/05/2022 12:19:36: Extending Arm
+18/05/2022 12:19:41: Retrieving Disk
+18/05/2022 12:19:46: Idle
+18/05/2022 12:19:51: Idle
+18/05/2022 12:19:56: Storing Black Disk
+18/05/2022 12:20:01: Idle
