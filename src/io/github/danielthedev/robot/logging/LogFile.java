@@ -1,4 +1,4 @@
-package io.github.danielthedev.robot.logging_feature;
+package io.github.danielthedev.robot.logging;
 
 import java.util.concurrent.TimeUnit;
 import java.util.Random;

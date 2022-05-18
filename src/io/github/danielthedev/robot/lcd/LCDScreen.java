@@ -7,6 +7,7 @@ import com.pi4j.library.pigpio.impl.PiGpioBase;
 import com.pi4j.library.pigpio.internal.PIGPIO;
 
 import io.github.danielthedev.robot.Pin;
+import io.github.danielthedev.robot.PinFactory;
 
 public class LCDScreen {
 
@@ -62,12 +63,12 @@ public class LCDScreen {
 	private int[] row_offsets = new int[4];
 
 	public LCDScreen(Context context, Pin rs, Pin enable, Pin d0, Pin d1, Pin d2, Pin d3) {
-		this.rs_pin = createPin(context, rs);
-		this.enable_pin = createPin(context, enable);
-		this.data_pins[0] = createPin(context, d0);
-		this.data_pins[1] = createPin(context, d1);
-		this.data_pins[2] = createPin(context, d2);
-		this.data_pins[3] = createPin(context, d3);
+		this.rs_pin = PinFactory.createOutputPin(context, rs, "LCD");
+		this.enable_pin = PinFactory.createOutputPin(context, enable, "LCD");
+		this.data_pins[0] = PinFactory.createOutputPin(context, d0, "LCD");
+		this.data_pins[1] = PinFactory.createOutputPin(context, d1, "LCD");
+		this.data_pins[2] = PinFactory.createOutputPin(context, d2, "LCD");
+		this.data_pins[3] = PinFactory.createOutputPin(context, d3, "LCD");
 
 		this.displayfunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
 
@@ -290,11 +291,5 @@ public class LCDScreen {
 	public void display() {
 		this.displaycontrol |= LCD_DISPLAYON;
 		this.command(LCD_DISPLAYCONTROL | this.displaycontrol);
-	}
-
-	private static DigitalOutput createPin(Context context, Pin pin) {
-		return context.create(DigitalOutput.newConfigBuilder(context).id("LCD-" + pin.getName()).name(pin.getName())
-				.address(pin.getBCMAddress()).shutdown(DigitalState.LOW).initial(DigitalState.LOW)
-				.provider("pigpio-digital-output"));
 	}
 }

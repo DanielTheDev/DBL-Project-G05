@@ -6,6 +6,7 @@ import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.library.pigpio.internal.PIGPIO;
 
 import io.github.danielthedev.robot.Pin;
+import io.github.danielthedev.robot.PinFactory;
 
 public class MotorController {
 	
@@ -18,10 +19,10 @@ public class MotorController {
 	private int latchState = 0;
 	
 	public MotorController(Context context, Pin latchPin, Pin dataPin, Pin clockPin, Pin enablePin) {
-		this.latchPin = createPin(context, latchPin);
-		this.dataPin = createPin(context, dataPin);
-		this.clockPin = createPin(context, clockPin);
-		this.enablePin = createPin(context, enablePin);
+		this.latchPin = PinFactory.createOutputPin(context, latchPin, "MC");
+		this.dataPin = PinFactory.createOutputPin(context, dataPin, "MC");
+		this.clockPin = PinFactory.createOutputPin(context, clockPin, "MC");
+		this.enablePin = PinFactory.createOutputPin(context, enablePin, "MC");
 	}
 	
 	private void latch() {
@@ -47,16 +48,7 @@ public class MotorController {
 		System.out.println();
 	}
 	
-	private static DigitalOutput createPin(Context context, Pin pin) {
-		return context.create(
-				DigitalOutput.newConfigBuilder(context)
-	                .id("MC-"+pin.getName())
-	                .name(pin.getName())
-	                .address(pin.getBCMAddress())
-	                .shutdown(DigitalState.LOW)
-	                .initial(DigitalState.LOW)
-	                .provider("pigpio-digital-output"));
-	}
+
 	
 	private void delayMicroseconds(int microseconds) {
 		PIGPIO.gpioDelay(microseconds);

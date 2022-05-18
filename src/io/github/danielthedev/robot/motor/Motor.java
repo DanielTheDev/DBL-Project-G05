@@ -5,6 +5,7 @@ import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmType;
 
 import io.github.danielthedev.robot.Pin;
+import io.github.danielthedev.robot.PinFactory;
 
 public class Motor {
 
@@ -19,7 +20,7 @@ public class Motor {
 	public Motor(Context context, MotorController controller, MotorType type, Pin pwnPin) {
 		this.type = type;
 		this.controller = controller;
-		this.pwmPin = createPin(context, pwnPin);
+		this.pwmPin = PinFactory.createPWMPin(context, pwnPin, "Motor", FREQUENCEY);
 		this.controller.enable();
 	}
 	
@@ -47,7 +48,8 @@ public class Motor {
 		if(speed <= 0 && speed > 100) {
 			this.pwmPin.off();
 		} else {
-			this.pwmPin.on(250, FREQUENCEY);
+			System.out.println("on");
+			this.pwmPin.on(speed, FREQUENCEY);
 		}
 	}
 
@@ -69,19 +71,5 @@ public class Motor {
 
 	public MotorState getState() {
 		return state;
-	}
-	
-	private static Pwm createPin(Context context, Pin pin) {
-		Pwm pwmPin = context.create(Pwm.newConfigBuilder(context)
-	                .id("Motor-"+pin.getName())
-	                .name(pin.getName())
-	                .address(pin.getBCMAddress())
-	                .pwmType(PwmType.SOFTWARE)
-	                .initial(0)
-	                .shutdown(0)
-	                .provider("pigpio-pwm")
-	                .build());
-		pwmPin.setFrequency(FREQUENCEY);
-		return pwmPin;
 	}
 }

@@ -7,7 +7,9 @@ import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.io.gpio.digital.DigitalStateChangeEvent;
 import com.pi4j.io.gpio.digital.DigitalStateChangeListener;
 
+import io.github.danielthedev.robot.DiskType;
 import io.github.danielthedev.robot.Pin;
+import io.github.danielthedev.robot.PinFactory;
 
 public class Arduino implements DigitalStateChangeListener {
 	
@@ -20,8 +22,8 @@ public class Arduino implements DigitalStateChangeListener {
 	
 	public Arduino(Context context, Pin clockPin, Pin dataPin, ArduinoListener listener) {
 		this.listener = listener;
-		this.clockPin = createPin(context, clockPin);
-		this.dataPin = createPin(context, dataPin);
+		this.clockPin = PinFactory.createInputPin(context, clockPin, "ARD");
+		this.dataPin = PinFactory.createInputPin(context, dataPin, "ARD");
 	}
 	
 	public void enable() {
@@ -34,10 +36,11 @@ public class Arduino implements DigitalStateChangeListener {
 	
 	@Override
 	public void onDigitalStateChange(DigitalStateChangeEvent e) {
-		boolean dat = this.dataPin.isHigh();
+		int dat = this.dataPin.isHigh() ? 1 : 0;
 		if(e.state() == DigitalState.HIGH) {
+			System.out.println(dat);
 			this.buffer <<= 1;
-			this.buffer |= dat ? 1 : 0;
+			this.buffer |= dat;
 			if(this.bufferIndex == 1) {
 				this.bufferIndex = -1;
 				this.executeCommand();
@@ -47,7 +50,7 @@ public class Arduino implements DigitalStateChangeListener {
 	}
 
 	private void executeCommand() {
-		int opcode = this.buffer & 0x03;
+		int opcode = this.buffer & 0b00000011;
 		ArduinoCommandType command = ArduinoCommandType.getCommandType(opcode);
 		switch (command) {
 		case DETECT_BLACK_DISK:
@@ -65,11 +68,4 @@ public class Arduino implements DigitalStateChangeListener {
 		}
 		
 	}
-
-	private static DigitalInput createPin(Context context, Pin pin) {
-		return context.create(DigitalInput.newConfigBuilder(context).id("Arduino-" + pin.getName()).name(pin.getName())
-				.address(pin.getBCMAddress())
-				.provider("pigpio-digital-input"));
-	}
-
 }
