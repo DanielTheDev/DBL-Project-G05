@@ -1,4 +1,4 @@
-package io.github.danielthedev.robot;
+package io.github.danielthedev.robot.enums;
 
 public enum State {
 

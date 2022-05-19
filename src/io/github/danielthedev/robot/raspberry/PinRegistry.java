@@ -1,14 +1,14 @@
-package io.github.danielthedev.robot;
+package io.github.danielthedev.robot.raspberry;
 
-import static io.github.danielthedev.robot.Pin.GPIO_13;
-import static io.github.danielthedev.robot.Pin.GPIO_17;
-import static io.github.danielthedev.robot.Pin.GPIO_19;
-import static io.github.danielthedev.robot.Pin.GPIO_21;
-import static io.github.danielthedev.robot.Pin.GPIO_26;
-import static io.github.danielthedev.robot.Pin.GPIO_27;
-import static io.github.danielthedev.robot.Pin.GPIO_4;
-import static io.github.danielthedev.robot.Pin.GPIO_5;
-import static io.github.danielthedev.robot.Pin.GPIO_6;
+import static io.github.danielthedev.robot.raspberry.Pin.GPIO_13;
+import static io.github.danielthedev.robot.raspberry.Pin.GPIO_17;
+import static io.github.danielthedev.robot.raspberry.Pin.GPIO_19;
+import static io.github.danielthedev.robot.raspberry.Pin.GPIO_21;
+import static io.github.danielthedev.robot.raspberry.Pin.GPIO_26;
+import static io.github.danielthedev.robot.raspberry.Pin.GPIO_27;
+import static io.github.danielthedev.robot.raspberry.Pin.GPIO_4;
+import static io.github.danielthedev.robot.raspberry.Pin.GPIO_5;
+import static io.github.danielthedev.robot.raspberry.Pin.GPIO_6;
 
 public class PinRegistry {
 

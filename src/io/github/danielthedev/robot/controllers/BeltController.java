@@ -2,10 +2,10 @@ package io.github.danielthedev.robot.controllers;
 
 import com.pi4j.context.Context;
 
-import io.github.danielthedev.robot.PinRegistry;
-import io.github.danielthedev.robot.motor.Motor;
-import io.github.danielthedev.robot.motor.MotorController;
-import io.github.danielthedev.robot.motor.MotorType;
+import io.github.danielthedev.robot.raspberry.PinRegistry;
+import io.github.danielthedev.robot.raspberry.library.motor.Motor;
+import io.github.danielthedev.robot.raspberry.library.motor.MotorController;
+import io.github.danielthedev.robot.raspberry.library.motor.MotorType;
 
 public class BeltController {
 

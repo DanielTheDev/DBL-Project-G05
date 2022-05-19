@@ -1,4 +1,4 @@
-package io.github.danielthedev.robot.arduino;
+package io.github.danielthedev.robot.raspberry.library.arduino;
 
 public enum ArduinoCommandType {
 

@@ -1,13 +1,11 @@
-package io.github.danielthedev.robot.lcd;
+package io.github.danielthedev.robot.raspberry.library.lcd;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
-import com.pi4j.io.gpio.digital.DigitalState;
-import com.pi4j.library.pigpio.impl.PiGpioBase;
 import com.pi4j.library.pigpio.internal.PIGPIO;
 
-import io.github.danielthedev.robot.Pin;
-import io.github.danielthedev.robot.PinFactory;
+import io.github.danielthedev.robot.raspberry.Pin;
+import io.github.danielthedev.robot.raspberry.PinFactory;
 
 public class LCDScreen {
 

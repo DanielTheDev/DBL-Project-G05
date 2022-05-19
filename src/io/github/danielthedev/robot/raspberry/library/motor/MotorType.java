@@ -1,4 +1,4 @@
-package io.github.danielthedev.robot.motor;
+package io.github.danielthedev.robot.raspberry.library.motor;
 
 public enum MotorType {
 	

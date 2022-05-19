@@ -1,15 +1,14 @@
-package io.github.danielthedev.robot.arduino;
+package io.github.danielthedev.robot.raspberry.library.arduino;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.io.gpio.digital.DigitalStateChangeEvent;
 import com.pi4j.io.gpio.digital.DigitalStateChangeListener;
 
-import io.github.danielthedev.robot.DiskType;
-import io.github.danielthedev.robot.Pin;
-import io.github.danielthedev.robot.PinFactory;
+import io.github.danielthedev.robot.enums.DiskType;
+import io.github.danielthedev.robot.raspberry.Pin;
+import io.github.danielthedev.robot.raspberry.PinFactory;
 
 public class Arduino implements DigitalStateChangeListener {
 	

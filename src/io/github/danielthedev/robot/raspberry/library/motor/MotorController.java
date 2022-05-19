@@ -1,14 +1,16 @@
-package io.github.danielthedev.robot.motor;
+package io.github.danielthedev.robot.raspberry.library.motor;
+
+import static io.github.danielthedev.robot.raspberry.PinRegistry.*;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
-import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.library.pigpio.internal.PIGPIO;
 
-import io.github.danielthedev.robot.Pin;
-import io.github.danielthedev.robot.PinFactory;
+import io.github.danielthedev.robot.raspberry.Pin;
+import io.github.danielthedev.robot.raspberry.PinFactory;
 
 public class MotorController {
+	
 	
 	public final DigitalOutput latchPin;
 	public final DigitalOutput dataPin;
@@ -18,11 +20,11 @@ public class MotorController {
 	//bitmask of the latches values
 	public int latchState = 0;
 	
-	public MotorController(Context context, Pin latchPin, Pin dataPin, Pin clockPin, Pin enablePin) {
-		this.latchPin = PinFactory.createOutputPin(context, latchPin, "MC");
-		this.dataPin = PinFactory.createOutputPin(context, dataPin, "MC");
-		this.clockPin = PinFactory.createOutputPin(context, clockPin, "MC");
-		this.enablePin = PinFactory.createOutputPin(context, enablePin, "MC");
+	public MotorController(Context context) {
+		this.latchPin = PinFactory.createOutputPin(context, PIN_MC_LATCH, "MC");
+		this.dataPin = PinFactory.createOutputPin(context, PIN_MC_DATA, "MC");
+		this.clockPin = PinFactory.createOutputPin(context, PIN_MC_CLOCK, "MC");
+		this.enablePin = PinFactory.createOutputPin(context, PIN_MC_ENABLE, "MC");
 	}
 	
 	public void latch() {
