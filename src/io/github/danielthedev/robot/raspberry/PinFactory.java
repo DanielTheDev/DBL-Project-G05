@@ -1,4 +1,4 @@
-package io.github.danielthedev.robot;
+package io.github.danielthedev.robot.raspberry;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalInput;

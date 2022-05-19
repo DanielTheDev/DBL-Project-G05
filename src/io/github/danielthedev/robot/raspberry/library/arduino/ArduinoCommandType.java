@@ -1,4 +1,4 @@
-package io.github.danielthedev.robot.arduino;
+package io.github.danielthedev.robot.raspberry.library.arduino;
 
 public enum ArduinoCommandType {
 
@@ -9,7 +9,7 @@ public enum ArduinoCommandType {
 	
 	private final int opcode;
 
-	private ArduinoCommandType(int opcode) {
+	ArduinoCommandType(int opcode) {
 		this.opcode = opcode;
 	}
 

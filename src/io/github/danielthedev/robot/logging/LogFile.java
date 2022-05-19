@@ -1,14 +1,14 @@
 package io.github.danielthedev.robot.logging;
 
-import java.util.concurrent.TimeUnit;
-import java.util.Random;
-import java.text.SimpleDateFormat;  
-import java.util.Date;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class LogFile {
 	

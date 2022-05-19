@@ -1,15 +1,14 @@
-package io.github.danielthedev.robot.motor;
+package io.github.danielthedev.robot.raspberry.library.motor;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.pwm.Pwm;
-import com.pi4j.io.pwm.PwmType;
 
-import io.github.danielthedev.robot.Pin;
-import io.github.danielthedev.robot.PinFactory;
+import io.github.danielthedev.robot.raspberry.Pin;
+import io.github.danielthedev.robot.raspberry.PinFactory;
 
 public class Motor {
 
-	private static final int FREQUENCEY = 39000;
+	public static final int FREQUENCEY = 39000;
 	
 	private final MotorType type;
 	private final MotorController controller; 

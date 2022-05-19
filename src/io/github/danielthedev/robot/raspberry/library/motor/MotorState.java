@@ -1,4 +1,4 @@
-package io.github.danielthedev.robot.motor;
+package io.github.danielthedev.robot.raspberry.library.motor;
 
 public enum MotorState {
 
@@ -9,7 +9,7 @@ public enum MotorState {
 	private final boolean forward;
 	private final boolean backward;
 	
-	private MotorState(boolean forward, boolean backward) {
+	MotorState(boolean forward, boolean backward) {
 		this.forward = forward;
 		this.backward = backward;
 	}

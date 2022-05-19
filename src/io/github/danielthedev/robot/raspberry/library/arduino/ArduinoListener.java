@@ -1,6 +1,6 @@
-package io.github.danielthedev.robot.arduino;
+package io.github.danielthedev.robot.raspberry.library.arduino;
 
-import io.github.danielthedev.robot.DiskType;
+import io.github.danielthedev.robot.enums.DiskType;
 
 public interface ArduinoListener {
 
