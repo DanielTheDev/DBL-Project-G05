@@ -6,6 +6,7 @@ import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.io.gpio.digital.DigitalStateChangeEvent;
 import com.pi4j.io.gpio.digital.DigitalStateChangeListener;
 
+import io.github.danielthedev.robot.Robot;
 import io.github.danielthedev.robot.enums.DiskType;
 import io.github.danielthedev.robot.raspberry.Pin;
 import io.github.danielthedev.robot.raspberry.PinFactory;
@@ -53,15 +54,19 @@ public class Arduino implements DigitalStateChangeListener {
 		ArduinoCommandType command = ArduinoCommandType.getCommandType(opcode);
 		switch (command) {
 		case DETECT_BLACK_DISK:
+			Robot.LOGGER.debug("Detected black disk");
 			this.listener.onItemRead(DiskType.BLACK);
 			break;
 		case DETECT_WHITE_DISK:
+			Robot.LOGGER.debug("Detected white disk");
 			this.listener.onItemRead(DiskType.WHITE);
 			break;
 		case DETECT_DISK:
+			Robot.LOGGER.debug("Detected a disk");
 			this.listener.onItemDetect();
 			break;
 		case DETECT_FAILURE:
+			Robot.LOGGER.debug("Detected failure");
 			this.listener.onFailure();
 			break;
 		}

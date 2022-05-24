@@ -22,18 +22,21 @@ public class BeltController {
 	}
 	
 	public void moveLeft() {
+		Robot.LOGGER.debug("Belt is Going to the Left");
 		this.motor.setState(MotorState.BACKWARD);
 		Delay.miliseconds((100*this.rotationDurationLeft)/this.motor.getSpeed());
 		this.stop();
 	}
 	
 	public void moveRight() {
+		Robot.LOGGER.debug("Belt is Going to the Right");
 		this.motor.setState(MotorState.FORWARD);
 		Delay.miliseconds((100*this.rotationDurationRight)/this.motor.getSpeed());
 		this.stop();
 	}
 	
 	public void stop() {
+		Robot.LOGGER.debug("Belt is Stopping");
 		this.motor.setState(MotorState.RELEASE);
 	}
 	

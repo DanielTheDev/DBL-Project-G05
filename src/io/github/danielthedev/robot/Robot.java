@@ -38,6 +38,7 @@ public class Robot {
 	}
 	
 	public void stop() {
+		Robot.LOGGER.debug("Robot should stop HERE");
 		this.motorController.disable();
 	}
 
