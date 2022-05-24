@@ -9,6 +9,7 @@ import com.pi4j.context.Context;
 import io.github.danielthedev.robot.controllers.ArmController;
 import io.github.danielthedev.robot.controllers.BeltController;
 import io.github.danielthedev.robot.raspberry.library.motor.MotorController;
+import io.github.danielthedev.robot.util.Delay;
 
 public class Robot {
 
@@ -16,18 +17,31 @@ public class Robot {
 
 	private final ArmController armController;
 	private final BeltController beltController;
+	private final MotorController motorController;
 
 	public Robot(Context context) {
-		MotorController motorController = new MotorController(context);
+		this.motorController = new MotorController(context);
 		this.armController = new ArmController(context, motorController);
 		this.beltController = new BeltController(context, motorController);
 	}
 
 	public void start() {
+		Robot.LOGGER.debug("Robot should start HERE");
 		this.preinit();
+		
+		beltController.moveLeft();
+		Delay.miliseconds(3000);
+		
+		beltController.moveRight();
+		
+		Delay.miliseconds(1000);
+	}
+	
+	public void stop() {
+		this.motorController.disable();
 	}
 
 	public void preinit() {
-		this.armController.preinit();
+		//this.armController.preinit();
 	}
 }

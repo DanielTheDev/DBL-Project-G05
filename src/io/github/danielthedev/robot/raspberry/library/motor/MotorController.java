@@ -9,6 +9,7 @@ import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.library.pigpio.internal.PIGPIO;
 
+import io.github.danielthedev.robot.Robot;
 import io.github.danielthedev.robot.raspberry.PinFactory;
 
 public class MotorController {
@@ -63,6 +64,11 @@ public class MotorController {
 		this.setLatchState(0);
 		this.enablePin.low();
 	}
+	
+	public void disable() {
+		this.setLatchState(0);
+		this.enablePin.high();
+	}
 
 	public int getLatchState() {
 		return latchState;
@@ -71,6 +77,7 @@ public class MotorController {
 	public void setLatchState(int latchState) {
 		this.latchState = latchState;
 		this.latch();
+		Robot.LOGGER.debug("Latch: "+latchState);
 	}
 
 	public DigitalOutput getLatchPin() {

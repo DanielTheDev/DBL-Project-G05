@@ -31,7 +31,7 @@ public class Motor {
 		if(state.isForward()) {
 			latchState |= (0b00000001 << this.type.getMotorBitPosForward());
 		} else {
-			latchState &= ~(0b00000001 << this.type.getMotorBitPosBackward());
+			latchState &= ~(0b00000001 << this.type.getMotorBitPosForward());
 		}
 		
 		if(state.isBackward()) {

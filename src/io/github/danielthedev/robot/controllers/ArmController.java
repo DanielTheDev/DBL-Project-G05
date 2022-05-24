@@ -21,7 +21,7 @@ public class ArmController implements ButtonListener {
 	private boolean isRetracted;
 	
 	public ArmController(Context context, MotorController motorController) {
-		this.motor = new Motor(context, motorController, MotorType.MOTOR_2, PinRegistry.PIN_MOTOR_2);
+		this.motor = new Motor(context, motorController, MotorType.MOTOR_1, PinRegistry.PIN_MOTOR_1);
 		this.button = new Button(context, PinRegistry.PIN_ARM_BUTTON, this);
 	}
 	
