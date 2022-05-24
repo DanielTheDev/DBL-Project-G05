@@ -1,21 +1,23 @@
 package io.github.danielthedev.robot.raspberry.library.motor;
 
-import static io.github.danielthedev.robot.raspberry.PinRegistry.*;
+import static io.github.danielthedev.robot.raspberry.PinRegistry.PIN_MC_CLOCK;
+import static io.github.danielthedev.robot.raspberry.PinRegistry.PIN_MC_DATA;
+import static io.github.danielthedev.robot.raspberry.PinRegistry.PIN_MC_ENABLE;
+import static io.github.danielthedev.robot.raspberry.PinRegistry.PIN_MC_LATCH;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.library.pigpio.internal.PIGPIO;
 
-import io.github.danielthedev.robot.raspberry.Pin;
 import io.github.danielthedev.robot.raspberry.PinFactory;
 
 public class MotorController {
 	
 	
-	public final DigitalOutput latchPin;
-	public final DigitalOutput dataPin;
-	public final DigitalOutput clockPin;
-	public final DigitalOutput enablePin;
+	private final DigitalOutput latchPin;
+	private final DigitalOutput dataPin;
+	private final DigitalOutput clockPin;
+	private final DigitalOutput enablePin;
 	
 	//bitmask of the latches values
 	public int latchState = 0;
@@ -27,7 +29,7 @@ public class MotorController {
 		this.enablePin = PinFactory.createOutputPin(context, PIN_MC_ENABLE, "MC");
 	}
 	
-	public void latch() {
+	private void latch() {
 		this.latchPin.low();
 		this.dataPin.low();
 		

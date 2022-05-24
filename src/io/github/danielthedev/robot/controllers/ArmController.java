@@ -1,9 +1,8 @@
 package io.github.danielthedev.robot.controllers;
 
-import java.util.stream.Stream;
-
 import com.pi4j.context.Context;
 
+import io.github.danielthedev.robot.Robot;
 import io.github.danielthedev.robot.raspberry.Button;
 import io.github.danielthedev.robot.raspberry.ButtonListener;
 import io.github.danielthedev.robot.raspberry.Pin;
@@ -12,7 +11,7 @@ import io.github.danielthedev.robot.raspberry.library.motor.Motor;
 import io.github.danielthedev.robot.raspberry.library.motor.MotorController;
 import io.github.danielthedev.robot.raspberry.library.motor.MotorState;
 import io.github.danielthedev.robot.raspberry.library.motor.MotorType;
-import io.github.danielthedev.robot.util.Timeout;
+import io.github.danielthedev.robot.util.Delay;
 
 public class ArmController implements ButtonListener { 
     
@@ -32,37 +31,28 @@ public class ArmController implements ButtonListener {
 
 	public void extendArm() {
 		this.motor.setState(MotorState.FORWARD);
+		Delay.miliseconds(500);
 	}
 	
 	public void retractArm() {
-		//this.motor.setState(MotorState.BACKWARD);
-		Timeout.createTimeoutPredicate(2000, v->!this.isRetracted, ()->{
-			System.out.println("timeout");
-		});		
-		
-
+		this.motor.setState(MotorState.BACKWARD);
 	}
 	
 	
 	@Override
-	public void onButtonClick(Pin pin) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onButtonClick(Pin pin) {}
 
 
 	@Override
 	public void onButtonPress(Pin pin) {
-		// TODO Auto-generated method stub
-		
+		this.isRetracted = true;
+		Robot.LOGGER.debug("Arm is retracted");
 	}
 
 
 	@Override
 	public void onButtonRelease(Pin pin) {
-		// TODO Auto-generated method stub
-		
+		this.isRetracted = false;
+		Robot.LOGGER.debug("Arm is no longer retracted");
 	}
-	
-	
 }

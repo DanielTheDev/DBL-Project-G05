@@ -3,6 +3,7 @@ package io.github.danielthedev.robot.raspberry.library.motor;
 import com.pi4j.context.Context;
 import com.pi4j.io.pwm.Pwm;
 
+import io.github.danielthedev.robot.Robot;
 import io.github.danielthedev.robot.raspberry.Pin;
 import io.github.danielthedev.robot.raspberry.PinFactory;
 
@@ -24,6 +25,7 @@ public class Motor {
 	}
 	
 	public void setState(MotorState state) {
+		Robot.LOGGER.debug("changed state");
 		int latchState = this.controller.getLatchState();
 		
 		if(state.isForward()) {
@@ -43,11 +45,11 @@ public class Motor {
 	}
 	
 	public void setSpeed(int speed) {
-		this.speed = speed;
 		if(speed <= 0 && speed > 100) {
 			this.pwmPin.off();
+			this.speed = 0;
 		} else {
-			System.out.println("on");
+			this.speed = speed;
 			this.pwmPin.on(speed, FREQUENCEY);
 		}
 	}

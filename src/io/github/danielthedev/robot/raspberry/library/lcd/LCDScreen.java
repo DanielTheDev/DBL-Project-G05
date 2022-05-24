@@ -2,10 +2,10 @@ package io.github.danielthedev.robot.raspberry.library.lcd;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
-import com.pi4j.library.pigpio.internal.PIGPIO;
 
 import io.github.danielthedev.robot.raspberry.Pin;
 import io.github.danielthedev.robot.raspberry.PinFactory;
+import io.github.danielthedev.robot.util.Delay;
 
 public class LCDScreen {
 
@@ -90,7 +90,7 @@ public class LCDScreen {
 		// according to datasheet, we need at least 40 ms after power rises above 2.7 V
 		// before sending commands. Arduino can turn on way before 4.5 V so we'll wait
 		// 50
-		this.delayMicroseconds(50000);
+		Delay.microseconds(50000);
 		// Now we pull both RS and R/W low to begin commands
 		this.rs_pin.low();
 		this.enable_pin.low();
@@ -100,15 +100,15 @@ public class LCDScreen {
 
 		// we start in 8bit mode, try to set 4 bit mode
 		this.write4bits(0x03);
-		this.delayMicroseconds(4500); // wait min 4.1ms
+		Delay.microseconds(4500); // wait min 4.1ms
 
 		// second try
 		this.write4bits(0x03);
-		this.delayMicroseconds(4500); // wait min 4.1ms
+		Delay.microseconds(4500); // wait min 4.1ms
 
 		// third go!
 		this.write4bits(0x03);
-		this.delayMicroseconds(150);
+		Delay.microseconds(150);
 
 		// finally, set to 4-bit interface
 		this.write4bits(0x02);
@@ -152,16 +152,13 @@ public class LCDScreen {
 
 	public void clear() {
 		this.command(LCD_CLEARDISPLAY); // clear display, set cursor position to zero
-		this.delayMicroseconds(2000); // this command takes a long time!
+		Delay.microseconds(2000); // this command takes a long time!
 	}
 
-	public void delayMicroseconds(int microseconds) {
-		PIGPIO.gpioDelay(microseconds);
-	}
 
 	public void home() {
 		this.command(LCD_RETURNHOME); // set cursor position to zero
-		this.delayMicroseconds(2000); // this command takes a long time!
+		Delay.microseconds(2000); // this command takes a long time!
 	}
 
 	public boolean write(int value) {
@@ -274,11 +271,11 @@ public class LCDScreen {
 
 	private void pulseEnable() {
 		this.enable_pin.low();
-		this.delayMicroseconds(1);
+		Delay.microseconds(1);
 		this.enable_pin.high();
-		this.delayMicroseconds(1); // enable pulse must be >450 ns
+		Delay.microseconds(1); // enable pulse must be >450 ns
 		this.enable_pin.low();
-		this.delayMicroseconds(100); // commands need >37 us to settle
+		Delay.microseconds(100); // commands need >37 us to settle
 	}
 
 	public void noDisplay() {
