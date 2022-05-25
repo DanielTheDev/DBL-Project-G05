@@ -59,10 +59,10 @@ public class PinFactory {
 	public static I2C createI2CChannel(Context context, int bus, int device) {
 		return ((I2CProvider)context.provider("pigpio-i2c"))
 					.create(I2C.newConfigBuilder(context)
-						.id("my-i2c-bus")
-				        .name("My I2C Bus")
+						.id("i2c-"+bus)
+				        .name("device-" + device)
 				        .bus(bus)
-				        .device(bus)
+				        .device(device)
 				        .build());
 	}
 

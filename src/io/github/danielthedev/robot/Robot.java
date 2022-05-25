@@ -41,11 +41,12 @@ public class Robot implements ArduinoListener {
 		//Delay.miliseconds(3000);
 		
 		//beltController.moveRight();
-			
+		this.arduinoListener.start();
 		Delay.miliseconds(10000);
 	}
 	
 	public void stop() {
+		this.arduinoListener.stop();
 		this.motorController.disable();
 	}
 
