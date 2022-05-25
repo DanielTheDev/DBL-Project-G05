@@ -11,6 +11,7 @@ import com.pi4j.library.pigpio.internal.PIGPIO;
 
 import io.github.danielthedev.robot.Robot;
 import io.github.danielthedev.robot.raspberry.PinFactory;
+import io.github.danielthedev.robot.util.Delay;
 
 public class MotorController {
 	
@@ -35,29 +36,21 @@ public class MotorController {
 		this.dataPin.low();
 		
 		for(int t = 0; t < 8; t++) {
-			this.delayMicroseconds(10);
+			Delay.microseconds(10);
 			this.clockPin.low();
 			
 			if(((latchState >> (7-t)) & 0b00000001) == 1) {
 				this.dataPin.high();
-				System.out.print("1");
 			} else {
 				this.dataPin.low();
-				System.out.print("0");
 			}
-			this.delayMicroseconds(10);
+			Delay.microseconds(10);
 			this.clockPin.high();
 		}
 		
 		this.latchPin.high();
-		System.out.println();
 	}
-	
 
-	
-	public void delayMicroseconds(int microseconds) {
-		PIGPIO.gpioDelay(microseconds);
-	}
 
 	
 	public void enable() {

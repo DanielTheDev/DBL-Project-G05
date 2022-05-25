@@ -23,6 +23,7 @@ public class ArmController implements ButtonListener {
 	public ArmController(Context context, MotorController motorController) {
 		this.motor = new Motor(context, motorController, MotorType.MOTOR_1, PinRegistry.PIN_MOTOR_1);
 		this.button = new Button(context, PinRegistry.PIN_ARM_BUTTON, this);
+		this.motor.setSpeed(100);
 	}
 	
 	public void preinit() {
@@ -31,11 +32,22 @@ public class ArmController implements ButtonListener {
 
 	public void extendArm() {
 		this.motor.setState(MotorState.FORWARD);
-		Delay.miliseconds(500);
+		Delay.miliseconds(450);
+		this.motor.setState(MotorState.RELEASE);
 	}
 	
 	public void retractArm() {
-		this.motor.setState(MotorState.BACKWARD);
+		if(this.button.isReleased()) {
+			this.motor.setState(MotorState.BACKWARD);
+			Robot.threadCommunication.waitButtonPress(3000, ()->{
+				this.motor.setState(MotorState.RELEASE);
+				Robot.LOGGER.debug("ERROR ARM DOES NOT RETRACT");
+			}, ()->{
+				Delay.miliseconds(60);
+				this.motor.setState(MotorState.RELEASE);
+				Robot.LOGGER.debug("Retracted");
+			});
+		}
 	}
 	
 	
@@ -46,6 +58,7 @@ public class ArmController implements ButtonListener {
 	@Override
 	public void onButtonPress(Pin pin) {
 		this.isRetracted = true;
+		Robot.threadCommunication.fireButtonPress();
 		Robot.LOGGER.debug("Arm is retracted");
 	}
 

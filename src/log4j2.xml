@@ -30,7 +30,7 @@
 			<AppenderRef ref="RobotFile" />
 			<AppenderRef ref="File" />
 		</Logger>
-		<Root level="all">
+		<Root level="debug">
 			<AppenderRef ref="Console" />
 			<AppenderRef ref="File" />
 		</Root>

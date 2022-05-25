@@ -1,35 +1,27 @@
-const int CLOCK = 3;
-const int DATA = 2;
+#include <Wire.h>
+#define DEVICE_ID 0x08
+
+int rgbSensor[3] = {999, 12,222};
+int lightSensor = 400;
 
 void setup() {
   Serial.begin(9600);
-  pinMode(CLOCK, OUTPUT);
-  pinMode(DATA, OUTPUT);
+  Wire.begin(DEVICE_ID); 
+  Wire.onRequest(requestEvent);
 }
 
-void loop() {
-  Serial.println("send 0x00 detect");
-  writeCode(0x00); //detect
-  delay(1000);
-  Serial.println("send 0x01 error");
-  writeCode(0x01); //error
-  delay(1000);
-  Serial.println("send 0x02 black");
-  writeCode(0x02); //white
-  delay(1000);
-  Serial.println("send 0x03 white");
-  writeCode(0x03); //white
-  delay(1000);
-  Serial.println("done send sequence");
-  delay(5000);
-}
-
-void writeCode(int opcode) {
-  for(int t = 0; t < 2; t++) {
-      digitalWrite(CLOCK, LOW);
-      delay(10);
-      digitalWrite(DATA, ((opcode >> t) & (0b00000001)) == 1 ? HIGH : LOW);
-      digitalWrite(CLOCK, HIGH);
-      delay(10);
+void requestEvent() {
+  for(int x = 0; x < 3; x++) {
+    writeShort(rgbSensor[x]);
   }
+  writeShort(lightSensor);
 }
+
+void writeShort(int val) {
+  Serial.println((val & 0x0000FF00) >> 8);
+  Serial.println(val & 0x000000FF);
+  Wire.write((byte)((val & 0x0000FF00) >> 8)); 
+  Wire.write((byte)(val & 0x000000FF));  
+}
+
+void loop() {}

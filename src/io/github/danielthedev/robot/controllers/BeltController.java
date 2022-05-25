@@ -2,7 +2,6 @@ package io.github.danielthedev.robot.controllers;
 
 import com.pi4j.context.Context;
 
-import io.github.danielthedev.robot.Robot;
 import io.github.danielthedev.robot.raspberry.PinRegistry;
 import io.github.danielthedev.robot.raspberry.library.motor.Motor;
 import io.github.danielthedev.robot.raspberry.library.motor.MotorController;
@@ -33,8 +32,17 @@ public class BeltController {
 		this.stop();
 	}
 	
+	public void prepareDisk() {
+		
+	}
+	
 	public void stop() {
 		this.motor.setState(MotorState.RELEASE);
+	}
+
+	public void preinit() {
+		this.moveLeft();
+		this.moveRight();
 	}
 	
 }

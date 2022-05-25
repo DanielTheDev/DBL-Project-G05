@@ -5,6 +5,8 @@ import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.io.gpio.digital.PullResistance;
+import com.pi4j.io.i2c.I2C;
+import com.pi4j.io.i2c.I2CProvider;
 import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmType;
 
@@ -54,4 +56,14 @@ public class PinFactory {
 	                .provider("pigpio-digital-input"));
 	}
 	
+	public static I2C createI2CChannel(Context context, int bus, int device) {
+		return ((I2CProvider)context.provider("pigpio-i2c"))
+					.create(I2C.newConfigBuilder(context)
+						.id("my-i2c-bus")
+				        .name("My I2C Bus")
+				        .bus(bus)
+				        .device(bus)
+				        .build());
+	}
+
 }

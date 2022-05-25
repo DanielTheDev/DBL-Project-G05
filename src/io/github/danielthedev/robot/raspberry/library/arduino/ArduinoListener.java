@@ -6,7 +6,7 @@ public interface ArduinoListener {
 
 	void onItemDetect();
 	
-	void onFailure();
+	void onArduinoFailure();
 	
 	void onItemRead(DiskType type);
 	

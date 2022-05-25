@@ -1,70 +1,63 @@
 package io.github.danielthedev.robot.raspberry.library.arduino;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.pi4j.context.Context;
-import com.pi4j.io.gpio.digital.DigitalInput;
-import com.pi4j.io.gpio.digital.DigitalState;
-import com.pi4j.io.gpio.digital.DigitalStateChangeEvent;
-import com.pi4j.io.gpio.digital.DigitalStateChangeListener;
+import com.pi4j.io.i2c.I2C;
 
-import io.github.danielthedev.robot.enums.DiskType;
-import io.github.danielthedev.robot.raspberry.Pin;
 import io.github.danielthedev.robot.raspberry.PinFactory;
+import io.github.danielthedev.robot.raspberry.PinRegistry;
 
-public class Arduino implements DigitalStateChangeListener {
+public class Arduino extends TimerTask implements AutoCloseable {
 	
+	private final static int READ_INTERVAL = 250;	
+	
+	private final Timer timer = new Timer();
 	private final ArduinoListener listener;
-	private final DigitalInput clockPin;
-	private final DigitalInput dataPin;
-	
-	private int buffer;
-	private int bufferIndex = 0;
-	
-	public Arduino(Context context, Pin clockPin, Pin dataPin, ArduinoListener listener) {
+	private final I2C channel;
+
+	public Arduino(Context context, ArduinoListener listener) {
 		this.listener = listener;
-		this.clockPin = PinFactory.createInputPin(context, clockPin, "ARD");
-		this.dataPin = PinFactory.createInputPin(context, dataPin, "ARD");
+		this.channel = PinFactory.createI2CChannel(context, PinRegistry.I2C_BUS, PinRegistry.I2C_DEVICE);
 	}
 	
-	public void enable() {
-		this.clockPin.addListener(this);
+	public void start() {
+		this.timer.schedule(this, 0, READ_INTERVAL);
 	}
 	
-	public void disable() {
-		this.clockPin.removeListener(this);
+	public void stop() {
+		this.timer.cancel();
 	}
 	
-	@Override
-	public void onDigitalStateChange(DigitalStateChangeEvent e) {
-		int dat = this.dataPin.isHigh() ? 1 : 0;
-		if(e.state() == DigitalState.HIGH) {
-			System.out.println(dat);
-			this.buffer <<= 1;
-			this.buffer |= dat;
-			if(this.bufferIndex == 1) {
-				this.bufferIndex = -1;
-				this.executeCommand();
+	private ArduinoPacket readPacket() {
+		int size = Short.BYTES;
+		short[] arr = new short[ArduinoPacket.PACKET_SIZE];
+		byte[] bytes = new byte[size*arr.length];
+		this.channel.read(bytes);
+		for(int t = 0; t < arr.length; t++) {
+			short val = 0;
+			for(int x = 0; x < 2; x++) {
+				System.out.println(bytes.length-x-1-(size*t));
+				val |= (bytes[bytes.length-x-1-(size*t)] & 0xFF) << (8 * x);
 			}
-			this.bufferIndex++;
+			arr[arr.length-1-t] = val;
 		}
+		return ArduinoPacket.deseserialize(arr);
 	}
 
-	public void executeCommand() {
-		int opcode = this.buffer & 0b00000011;
-		ArduinoCommandType command = ArduinoCommandType.getCommandType(opcode);
-		switch (command) {
-		case DETECT_BLACK_DISK:
-			this.listener.onItemRead(DiskType.BLACK);
-			break;
-		case DETECT_WHITE_DISK:
-			this.listener.onItemRead(DiskType.WHITE);
-			break;
-		case DETECT_DISK:
-			this.listener.onItemDetect();
-			break;
-		case DETECT_FAILURE:
-			this.listener.onFailure();
-			break;
+	@Override
+	public void close() throws Exception {
+		if(this.channel != null) {
+			this.channel.close();
 		}
+		this.timer.cancel();
+	}
+
+	@Override
+	public void run() {
+		ArduinoPacket packet = this.readPacket();
 		
 	}
+	
 }

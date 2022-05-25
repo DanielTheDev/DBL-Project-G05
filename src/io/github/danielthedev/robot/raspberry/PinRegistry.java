@@ -31,4 +31,7 @@ public class PinRegistry {
     public static final Pin PIN_LCD_D7 = new Pin("d7", GPIO_21);
     
     public static final Pin PIN_ARM_BUTTON = new Pin("btn", GPIO_4);
+    
+    public static final int I2C_BUS = 1;
+    public static final int I2C_DEVICE = 0x08;
 }

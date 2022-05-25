@@ -2,6 +2,9 @@ package io.github.danielthedev.robot.raspberry;
 
 public class Pin {
 
+	public static final int GPIO_2 = 2;
+	public static final int GPIO_3 = 3;
+	
 	public static final int GPIO_4 = 4;
 	public static final int GPIO_5 = 5;
 	public static final int GPIO_6 = 6;
