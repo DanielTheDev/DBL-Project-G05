@@ -11,7 +11,7 @@ import io.github.danielthedev.robot.raspberry.PinRegistry;
 
 public class Arduino extends TimerTask implements AutoCloseable {
 	
-	private final static int READ_INTERVAL = 1000;	
+	private final static int READ_INTERVAL = 250;	
 	
 	private final Timer timer = new Timer();
 	private final ArduinoListener listener;
@@ -63,5 +63,4 @@ public class Arduino extends TimerTask implements AutoCloseable {
 		ArduinoPacket packet = this.readPacket();
 		System.out.println(packet);
 	}
-	
 }

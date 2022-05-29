@@ -32,10 +32,6 @@ public class BeltController {
 		this.stop();
 	}
 	
-	public void prepareDisk() {
-		
-	}
-	
 	public void stop() {
 		this.motor.setState(MotorState.RELEASE);
 	}
