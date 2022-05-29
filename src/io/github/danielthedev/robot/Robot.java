@@ -25,13 +25,14 @@ public class Robot implements ArduinoListener {
 	private final BeltController beltController;
 	private final MotorController motorController;
 	private final Arduino arduinoListener;
-	private final ErrorIdentifier errorIdentifier = new ErrorIdentifier();
+	private final ErrorIdentifier errorIdentifier;
 	
 	public Robot(Context context) {
 		this.motorController = new MotorController(context);
 		this.armController = new ArmController(context, motorController);
 		this.beltController = new BeltController(context, motorController);
 		this.arduinoListener = new Arduino(context, this);
+		this.errorIdentifier = new ErrorIdentifier(this);
 	}
 
 	public void start() {

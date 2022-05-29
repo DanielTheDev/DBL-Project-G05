@@ -7,6 +7,8 @@ import com.pi4j.io.gpio.digital.DigitalStateChangeEvent;
 import com.pi4j.io.gpio.digital.DigitalStateChangeListener;
 import com.pi4j.io.gpio.digital.PullResistance;
 
+import io.github.danielthedev.robot.Robot;
+
 public class Button implements DigitalStateChangeListener {
 
 	private final DigitalInput button;
@@ -21,10 +23,12 @@ public class Button implements DigitalStateChangeListener {
 	}
 	
 	public boolean isPressed() {
+		Robot.LOGGER.debug("Button is pressed");
 		return this.button.isHigh();
 	}
 
 	public boolean isReleased() {
+		Robot.LOGGER.debug("Button is released");
 		return this.button.isLow();
 	}
 	

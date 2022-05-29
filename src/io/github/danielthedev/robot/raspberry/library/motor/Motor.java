@@ -45,6 +45,7 @@ public class Motor {
 	}
 	
 	public void setSpeed(int speed) {
+		Robot.LOGGER.debug("Setting speed to " + speed);
 		if(speed <= 0 && speed > 100) {
 			this.pwmPin.off();
 			this.speed = 0;

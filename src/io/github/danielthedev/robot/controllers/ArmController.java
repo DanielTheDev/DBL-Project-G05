@@ -31,6 +31,7 @@ public class ArmController implements ButtonListener {
 	}
 
 	public void extendArm() {
+		Robot.LOGGER.debug("Extending Arm");
 		this.motor.setState(MotorState.FORWARD);
 		Delay.miliseconds(450);
 		this.motor.setState(MotorState.RELEASE);
