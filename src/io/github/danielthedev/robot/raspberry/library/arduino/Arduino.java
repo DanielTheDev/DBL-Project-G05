@@ -1,45 +1,84 @@
 package io.github.danielthedev.robot.raspberry.library.arduino;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import com.pi4j.context.Context;
 import com.pi4j.io.i2c.I2C;
 
+import io.github.danielthedev.robot.ExceptionType;
+import io.github.danielthedev.robot.Robot;
+import io.github.danielthedev.robot.enums.DiskType;
 import io.github.danielthedev.robot.raspberry.PinFactory;
 import io.github.danielthedev.robot.raspberry.PinRegistry;
+import io.github.danielthedev.robot.util.Delay;
+import io.github.danielthedev.robot.util.DiskColor;
 
-public class Arduino extends TimerTask implements AutoCloseable {
-	
-	private final static int READ_INTERVAL = 250;	
-	
-	private final Timer timer = new Timer();
-	private final ArduinoListener listener;
+public class Arduino {
+
+	private DiskType detectedDisk;
+	private DiskColor defaultColor;
 	private final I2C channel;
 
-	public Arduino(Context context, ArduinoListener listener) {
-		this.listener = listener;
+	public Arduino(Context context) {
 		this.channel = PinFactory.createI2CChannel(context, PinRegistry.I2C_BUS, PinRegistry.I2C_DEVICE);
-	}
-	
-	public void start() {
-		this.timer.schedule(this, 0, READ_INTERVAL);
 	}
 	
 	public void stop() {
 		try {
-			this.close();
+			if(this.channel != null) {
+				this.channel.close();
+			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	private ArduinoPacket readPacket() {
+	public void detectDisk() {
+		do {
+			ArduinoPacket packet = this.readNextPacket();
+			if(packet.getColor().isNull()) Robot.throwError(ExceptionType.FAILING_ARDUINO_SENSOR);
+			this.detectedDisk = DiskType.getDisk(packet.getColor(), this.defaultColor);
+		} while(this.detectedDisk != null);
+	}
+	
+	public ArduinoPacket readNextPacket() {
+		ArduinoPacket lastPacket = this.readPacket();
+		while(true) {
+			Delay.miliseconds(200);
+			ArduinoPacket packet = this.readPacket();
+			if(packet.isChanged(lastPacket)) return packet;
+		}
+	}
+	
+	public void calibrate() {
+		Robot.verifyMainThread();
+		int calibratedCount = 4;
+		int red = 0;
+		int green = 0;
+		int blue = 0;
+		ArduinoPacket packet = this.readPacket();
+		ArduinoPacket nextPacket;
+		if(packet.getColor().isNull()) Robot.throwError(ExceptionType.FAILING_ARDUINO_SENSOR);
+		for(int x = 0; x < calibratedCount; x++) {
+			Delay.miliseconds(200);
+			do {
+				nextPacket = this.readPacket();
+				if(packet.getColor().isNull()) Robot.throwError(ExceptionType.FAILING_ARDUINO_SENSOR);
+				Delay.miliseconds(50);
+			} while(!nextPacket.isChanged(packet));
+			red += nextPacket.getColor().getRed();
+			green += nextPacket.getColor().getGreen();
+			blue += nextPacket.getColor().getBlue();
+		}
+		this.defaultColor = DiskColor.of(red/calibratedCount, green/calibratedCount, blue/calibratedCount);
+	}
+	
+	public ArduinoPacket readPacket() {		
 		int size = Short.BYTES;
 		short[] arr = new short[ArduinoPacket.PACKET_SIZE];
 		byte[] bytes = new byte[size*arr.length];
-		this.channel.read(bytes);
+		int s = this.channel.read(bytes);
+		if(s == -83) {
+			return null;
+		}
 		for(int t = 0; t < arr.length; t++) {
 			short val = 0;
 			for(int x = 0; x < 2; x++) {
@@ -50,17 +89,9 @@ public class Arduino extends TimerTask implements AutoCloseable {
 		return ArduinoPacket.deseserialize(arr);
 	}
 
-	@Override
-	public void close() throws Exception {
-		this.timer.cancel();
-		if(this.channel != null) {
-			this.channel.close();
-		}
+	public DiskType getDetectedDisk() {
+		return this.detectedDisk;
 	}
 
-	@Override
-	public void run() {
-		ArduinoPacket packet = this.readPacket();
-		System.out.println(packet);
-	}
+
 }

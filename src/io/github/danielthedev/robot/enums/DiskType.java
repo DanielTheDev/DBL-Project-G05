@@ -1,28 +1,23 @@
 package io.github.danielthedev.robot.enums;
 
+import io.github.danielthedev.robot.util.DiskColor;
+
 public enum DiskType {
 
-	BLACK(100, 100, 100),
-	WHITE(100, 100, 100);
+	BLACK(DiskColor.of(500, 500, 500)),
+	WHITE(DiskColor.of(1500, 1500, 1500));
 	
-	private final int red;
-	private final int green;
-	private final int blue;
+	private final DiskColor color;
 	
-	private DiskType(int red, int green, int blue) {
-		this.red = red;
-		this.green = green;
-		this.blue = blue;
+	private DiskType(DiskColor color) {
+		this.color = color;
 	}
 	
-	public static DiskType getDisk(short red, short green, short blue) {
+	public static DiskType getDisk(DiskColor color, DiskColor defaultColor) {
 		DiskType result = null;
-		int differenceFactor = 10000;
+		int differenceFactor = color.getColorDifferenceIndex(defaultColor);
 		for(DiskType disk : values()) {
-			int tempDifferenceFactor = 
-					(Math.abs(red - disk.red) +
-					Math.abs(green - disk.green) + 
-					Math.abs(blue - disk.blue))/3;
+			int tempDifferenceFactor = disk.getColor().getColorDifferenceIndex(color);
 			if(tempDifferenceFactor < differenceFactor) {
 				result = disk;
 			}
@@ -31,15 +26,7 @@ public enum DiskType {
 		
 	}
 
-	public int getRed() {
-		return red;
-	}
-
-	public int getGreen() {
-		return green;
-	}
-
-	public int getBlue() {
-		return blue;
+	public DiskColor getColor() {
+		return color;
 	}
 }

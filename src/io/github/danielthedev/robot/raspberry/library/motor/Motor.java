@@ -25,7 +25,6 @@ public class Motor {
 	}
 	
 	public void setState(MotorState state) {
-		Robot.LOGGER.debug("changed state");
 		int latchState = this.controller.getLatchState();
 		
 		if(state.isForward()) {

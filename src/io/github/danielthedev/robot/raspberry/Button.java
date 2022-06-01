@@ -8,37 +8,34 @@ import com.pi4j.io.gpio.digital.DigitalStateChangeListener;
 import com.pi4j.io.gpio.digital.PullResistance;
 
 import io.github.danielthedev.robot.Robot;
+import io.github.danielthedev.robot.sync.SyncVariable;
 
 public class Button implements DigitalStateChangeListener {
 
 	private final DigitalInput button;
-	private final Pin pin;
-	private final ButtonListener listener;
+	private final SyncVariable<Boolean> state;
 	
-	public Button(Context context, Pin pin, ButtonListener listener) {
+	public Button(Context context, Pin pin) {
 		this.button = PinFactory.createInputPin(context, pin, "btn", PullResistance.PULL_UP);
-		this.pin = pin;
-		this.listener = listener;
+		this.state = new SyncVariable<Boolean>(this.button.isHigh());
 		this.button.addListener(this);
 	}
 	
-	public boolean isPressed() {
-		Robot.LOGGER.debug("Button is pressed");
+	public boolean isPressedSync() {
+		Robot.verifyMainThread();
+		return this.state.getSync();
+	}
+	
+	public boolean isPressedAsync() {
 		return this.button.isHigh();
 	}
 
-	public boolean isReleased() {
-		Robot.LOGGER.debug("Button is released");
-		return this.button.isLow();
-	}
-	
 	@Override
 	public void onDigitalStateChange(DigitalStateChangeEvent e) {
-		if(e.state() == DigitalState.HIGH) {
-			this.listener.onButtonPress(this.pin);
-		} else {
-			this.listener.onButtonRelease(this.pin);
-			this.listener.onButtonClick(this.pin);
-		}
+		this.state.putSync(e.state() == DigitalState.HIGH);
+	}
+
+	public SyncVariable<Boolean> getState() {
+		return state;
 	}
 }
