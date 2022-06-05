@@ -7,6 +7,7 @@ import com.pi4j.context.Context;
 
 import io.github.danielthedev.robot.controllers.ArmController;
 import io.github.danielthedev.robot.controllers.BeltController;
+import io.github.danielthedev.robot.raspberry.Beeper;
 import io.github.danielthedev.robot.raspberry.library.arduino.Arduino;
 import io.github.danielthedev.robot.raspberry.library.lcd.LCDScreen;
 import io.github.danielthedev.robot.raspberry.library.motor.MotorController;
@@ -18,6 +19,7 @@ public class Robot {
 	public static final Logger LOGGER = LogManager.getLogger(Robot.class);
 	public static final String MAIN_THREAD = "robot-thread";
 		
+	private final Beeper beeper;
 	private final LCDScreen lcdScreen;
 	private final ArmController armController;
 	private final BeltController beltController;
@@ -37,6 +39,7 @@ public class Robot {
 		this.exceptionHandler = new RobotExceptionHandler(this);
 		this.lcdScreen = new LCDScreen(context);
 		this.sequenceList.registerSequences(this);
+		this.beeper = new Beeper(context);
 	}
 	
 	public void start() {
@@ -46,6 +49,7 @@ public class Robot {
 	}
 	
 	public void stop() {
+		Robot.LOGGER.info("Shutting down robot");
 		this.runSequence(SequenceType.SHUTDOWN);
 		this.sequenceList.reset();
 		this.arduino.stop();
@@ -54,10 +58,12 @@ public class Robot {
 	}
 	
 	public void preinit() {
+		Robot.LOGGER.info("Pre-initializing robot");
 		this.runSequence(SequenceType.STARTUP);
 	}
 	
 	public void init() {
+		Robot.LOGGER.info("Initializing robot");
 		this.runSequence(SequenceType.RUNTIME);
 	}
 	
@@ -105,6 +111,10 @@ public class Robot {
 
 	public SequenceType getSequenceType() {
 		return sequenceType;
+	}
+	
+	public Beeper getBeeper() {
+		return beeper;
 	}
 
 	public RobotExceptionHandler getExceptionHandler() {

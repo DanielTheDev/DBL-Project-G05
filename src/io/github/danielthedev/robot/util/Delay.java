@@ -8,7 +8,7 @@ public class Delay {
 
 	public static void miliseconds(long mili) {
 		try {
-			Robot.LOGGER.debug("Waiting a delay of " + mili + " miliseconds");
+			//Robot.LOGGER.debug("Waiting a delay of " + mili + " miliseconds");
 			Thread.sleep(mili);
 		} catch (InterruptedException e) {
 			e.printStackTrace();

@@ -28,13 +28,25 @@ public class DiskColor {
 		return green;
 	}
 	
-	public int getColorDifferenceIndex(DiskColor disk) {
-		return (Math.abs(red - disk.red) +
-				Math.abs(green - disk.green) + 
-				Math.abs(blue - disk.blue))/3;
+	public short getMatchPercentage(DiskColor color) { 
+		int max = 600;
+		return (short) (100*(1 - ((double)this.getColorDifferenceIndex(color)/max)));
+	}
+	
+	public int getColorDifferenceIndex(DiskColor color) {
+		return (Math.abs(red - color.red) +
+				Math.abs(green - color.green) + 
+				Math.abs(blue - color.blue))/3;
 	}
 
 	public boolean isNull() {
 		return (this.red == 0 && this.green == 0 && this.blue == 0) || (this.red < 0 || this.green < 0 || this.blue < 0);
 	}
+
+	@Override
+	public String toString() {
+		return "(red=" + red + ", blue=" + blue + ", green=" + green + ")";
+	}
+	
+	
 }

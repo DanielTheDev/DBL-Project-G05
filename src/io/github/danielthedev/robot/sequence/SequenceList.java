@@ -14,23 +14,26 @@ public class SequenceList {
 	
 	public boolean executeSequence(SequenceType sequenceType, Robot robot) {
 		Robot.verifyMainThread();
+		Robot.LOGGER.debug("Finding sequence " + sequenceType.name());
 		int index = this.findNextSequence(sequenceType);
+		Robot.LOGGER.debug("Index sequence " + index);
 		if(index == -1) return false;
 		this.sequenceIndex = index;
 		SequenceFunction sequenceItem = this.sequenceList.get(this.sequenceIndex);
 		robot.getLCDScreen().printState(sequenceType, sequenceItem.getName());
+		Robot.LOGGER.info("Starting sequence " + sequenceItem.getName());
 		sequenceItem.callFunction(robot);
+		this.sequenceIndex++;
 		return true;
 	}
 	
 	public int findNextSequence(SequenceType type) {
 		boolean duplicate = false;
-		
-		for(int x = sequenceIndex+1; x < this.sequenceList.size(); x++) {
+		for(int x = sequenceIndex; x < this.sequenceList.size(); x++) {
 			if(this.sequenceList.get(x).getType() == type) return x;
 			if(type == SequenceType.RUNTIME) {
 				if(x >= this.sequenceIndex-1) {
-					if(!duplicate) break;
+					if(duplicate) break;
 					x = 0;
 					duplicate = true;
 				}

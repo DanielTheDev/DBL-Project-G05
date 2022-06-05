@@ -29,14 +29,26 @@ public class Arduino {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}	
 	
-	public void detectDisk() {
+	
+	public void detectDisk(Robot robot) {
+		ArduinoPacket packet;
 		do {
-			ArduinoPacket packet = this.readNextPacket();
+			packet = this.readNextPacket();
 			if(packet.getColor().isNull()) Robot.throwError(ExceptionType.FAILING_ARDUINO_SENSOR);
 			this.detectedDisk = DiskType.getDisk(packet.getColor(), this.defaultColor);
-		} while(this.detectedDisk != null);
+			
+			//REMOVE
+			this.detectedDisk = DiskType.BLACK;
+			break;
+		} while(this.detectedDisk == null);
+		robot.getLCDScreen().clear();
+		robot.getLCDScreen().printLine("Disk Detected", 0);
+		robot.getLCDScreen().printLine(String.format("Match %d%% %s", 
+				this.detectedDisk.getColor().getMatchPercentage(packet.getColor()),
+				this.detectedDisk.name()), 1);
+		Delay.miliseconds(1000); //CHANGE
 	}
 	
 	public ArduinoPacket readNextPacket() {
@@ -50,7 +62,7 @@ public class Arduino {
 	
 	public void calibrate() {
 		Robot.verifyMainThread();
-		int calibratedCount = 4;
+		int calibratedCount = 8;
 		int red = 0;
 		int green = 0;
 		int blue = 0;
@@ -69,6 +81,8 @@ public class Arduino {
 			blue += nextPacket.getColor().getBlue();
 		}
 		this.defaultColor = DiskColor.of(red/calibratedCount, green/calibratedCount, blue/calibratedCount);
+		Robot.LOGGER.info("Calibrated robot on " + this.defaultColor);
+
 	}
 	
 	public ArduinoPacket readPacket() {		

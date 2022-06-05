@@ -26,7 +26,6 @@ public class BeltController {
 	
 	public void moveLeft() {
 		this.motor.setState(MotorState.BACKWARD);
-		
 	}
 	
 	public void moveRight() {
@@ -34,12 +33,12 @@ public class BeltController {
 	}
 	
 	public void moveBelt(Robot robot) {
+		Delay.miliseconds(1000);
 		DiskType type = robot.getArduino().getDetectedDisk();
 		int delay = type == DiskType.BLACK ? 2000 : 1000;
-		int buttonInterval = 600;
-		Runnable belt = type == DiskType.BLACK ? this::moveRight : this::moveLeft;
-		
-		while(delay <= 0) {
+		int buttonInterval = 1000;
+		Runnable belt = type == DiskType.BLACK ? this::moveLeft : this::moveRight;
+		while(delay > 0) {
 			belt.run();
 			if(delay > buttonInterval) {
 				long time = System.currentTimeMillis();

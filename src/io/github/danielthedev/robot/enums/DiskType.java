@@ -4,9 +4,10 @@ import io.github.danielthedev.robot.util.DiskColor;
 
 public enum DiskType {
 
-	BLACK(DiskColor.of(500, 500, 500)),
-	WHITE(DiskColor.of(1500, 1500, 1500));
-	
+	BLACK(DiskColor.of(97, 138, 153)),
+	GREEN(DiskColor.of(206, 409, 290)),
+	WHITE(DiskColor.of(520, 765, 827));
+
 	private final DiskColor color;
 	
 	private DiskType(DiskColor color) {

@@ -1,5 +1,6 @@
 package io.github.danielthedev.robot.sequence;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import io.github.danielthedev.robot.Robot;
@@ -8,21 +9,19 @@ public class SequenceFunction {
 	
 	private final SequenceType type;
 	private final String name;
-	private final Consumer<Robot> consumer;
-	private final Runnable runnable;
+	private Optional<Consumer<Robot>> consumer = Optional.empty();
+	private Optional<Runnable> runnable = Optional.empty();
 	
 	public SequenceFunction(SequenceType type, String name, Consumer<Robot> consumer) {
 		this.type = type;
 		this.name = name;
-		this.consumer = consumer;
-		this.runnable = null;
+		this.consumer = Optional.of(consumer);
 	}
 	
 	public SequenceFunction(SequenceType type, String name, Runnable runnable) {
 		this.type = type;
 		this.name = name;
-		this.runnable = runnable;
-		this.consumer = null;
+		this.runnable = Optional.of(runnable);
 	}
 
 	public SequenceType getType() {
@@ -30,12 +29,8 @@ public class SequenceFunction {
 	}
 
 	public void callFunction(Robot robot) {
-		if(this.runnable != null) {
-			this.runnable.run();
-		}
-		if(this.consumer != null) {
-			this.consumer.accept(robot);
-		}
+		this.consumer.ifPresent(s->s.accept(robot));
+		this.runnable.ifPresent(Runnable::run);
 	}
 
 	public String getName() {

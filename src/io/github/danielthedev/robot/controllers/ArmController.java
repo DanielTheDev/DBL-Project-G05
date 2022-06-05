@@ -53,9 +53,10 @@ public class ArmController {
 		this.extendArm();
 		boolean success = this.getButton().getState().waitForChange(300);
 		if(!success || this.getButton().isPressedSync()) {
+			this.stop();
 			Robot.throwError(ExceptionType.FAILED_ARM_EXTEND);
 		}
-		Delay.miliseconds(500);
+		Delay.miliseconds(350);
 		this.stop();
 		Delay.miliseconds(5000);
 		this.retractArm();
@@ -64,7 +65,7 @@ public class ArmController {
 			this.stop();
 			Robot.throwError(ExceptionType.FAILED_ARM_RETRACT);
 		} else {
-			Delay.miliseconds(60);
+			Delay.miliseconds(50);
 			this.stop();
 		}
 	}
