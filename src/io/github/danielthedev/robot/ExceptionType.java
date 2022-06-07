@@ -6,7 +6,8 @@ public enum ExceptionType {
 	NOT_MAIN_THREAD(0x02, "Function not called on main thread"),
 	FAILING_ARDUINO_SENSOR(0x03, "Arduino sensor failed"),
 	FAILED_ARM_EXTEND(0x04, "Arm could not extend"),
-	FAILED_ARM_RETRACT(0x05, "Arm could not retract");
+	FAILED_ARM_RETRACT(0x05, "Arm could not retract"),
+	UNKNOWN_EXCEPTION(0x05, "Robot cannot continue");
 	
 	private final int id;
 	private final String description;

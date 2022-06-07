@@ -125,6 +125,14 @@ public class Robot {
 		throw type.createException();
 	}
 	
+	public static void throwErrorIf(boolean predicate, ExceptionType type) {
+		if(predicate) throwError(type);
+	}
+	
+	public static void throwErrorIfNot(boolean predicate, ExceptionType type) {
+		throwErrorIf(!predicate, type);
+	}
+	
 	public static boolean isMainThread() {
 		return Thread.currentThread().getName().equals(MAIN_THREAD);
 	}

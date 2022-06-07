@@ -3,7 +3,7 @@ package io.github.danielthedev.robot.sequence;
 public enum SequenceType {
 
 	STARTUP("Starting"),
-	RUNTIME("Runnig"),
+	RUNTIME("Running"),
 	SHUTDOWN("Stopping");
 	
 	private final String status;

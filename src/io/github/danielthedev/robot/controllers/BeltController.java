@@ -2,9 +2,9 @@ package io.github.danielthedev.robot.controllers;
 
 import com.pi4j.context.Context;
 
+import io.github.danielthedev.robot.DiskType;
 import io.github.danielthedev.robot.ExceptionType;
 import io.github.danielthedev.robot.Robot;
-import io.github.danielthedev.robot.enums.DiskType;
 import io.github.danielthedev.robot.raspberry.Button;
 import io.github.danielthedev.robot.raspberry.PinRegistry;
 import io.github.danielthedev.robot.raspberry.library.motor.Motor;
@@ -24,45 +24,53 @@ public class BeltController {
 		this.motor.setSpeed(100);
 	}
 	
+	public void moveItem(Robot robot) {
+		switch (robot.getArduino().getDetectedDisk()) {
+		case WHITE:
+			this.moveLeft();
+			break;
+		case BLACK:
+			this.moveRight();
+			break;
+		}
+	}
+	
 	public void moveLeft() {
 		this.motor.setState(MotorState.BACKWARD);
+		this.dynamicDelay(Delay.WHITE_DISK_MOVE_DELAY);
+		this.stop();
 	}
 	
 	public void moveRight() {
 		this.motor.setState(MotorState.FORWARD);
-	}
-	
-	public void moveBelt(Robot robot) {
-		Delay.miliseconds(1000);
-		DiskType type = robot.getArduino().getDetectedDisk();
-		int delay = type == DiskType.BLACK ? 2000 : 1000;
-		int buttonInterval = 1000;
-		Runnable belt = type == DiskType.BLACK ? this::moveLeft : this::moveRight;
-		while(delay > 0) {
-			belt.run();
-			if(delay > buttonInterval) {
-				long time = System.currentTimeMillis();
-				boolean success = this.getButton().getState().waitForChange(buttonInterval);
-				delay -= System.currentTimeMillis() - time;
-				if(!success) {
-					Robot.throwError(ExceptionType.BELT_STUCK);
-				}
-			} else {
-				Delay.miliseconds(delay);
-				delay = 0;
-			}
-		}
+		this.dynamicDelay(Delay.BLACK_DISK_MOVE_DELAY);
 		this.stop();
 	}
-
+	
+	public void testBelt() {
+		this.motor.setState(MotorState.FORWARD);
+		Robot.throwErrorIfNot(this.getButton().getState().waitForChange(Delay.CONVEYER_BELT_TIMEOUT), ExceptionType.BELT_STUCK);
+		this.motor.setState(MotorState.BACKWARD);
+		Robot.throwErrorIfNot(this.getButton().getState().waitForChange(Delay.CONVEYER_BELT_TIMEOUT), ExceptionType.BELT_STUCK);
+		this.stop();
+	}
+	
+	private void dynamicDelay(int delay) {
+		while(delay > Delay.CONVEYER_BELT_TIMEOUT) {
+			boolean success = this.getButton().getState().waitForChange(Delay.CONVEYER_BELT_TIMEOUT);
+			Robot.throwErrorIf(!success, ExceptionType.BELT_STUCK);
+			delay -= Delay.CONVEYER_BELT_TIMEOUT;
+		}
+		Delay.miliseconds(delay);
+	}
+	
 	public void stop() {
 		this.motor.setState(MotorState.RELEASE);
 	}
 
+
 	public Button getButton() {
 		return button;
 	}
-	
-	
 	
 }

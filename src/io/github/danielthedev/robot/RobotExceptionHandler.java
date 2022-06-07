@@ -23,6 +23,10 @@ public class RobotExceptionHandler implements UncaughtExceptionHandler {
 	
 	@Override
 	public void uncaughtException(Thread thread, Throwable e) {
+		this.robot.getArmController().stop();
+		this.robot.getBeltController().stop();
+		
+		
 		this.robot.getBeeper().beep(150);
 		Delay.miliseconds(50);
 		this.robot.getBeeper().beep(150);
@@ -47,7 +51,8 @@ public class RobotExceptionHandler implements UncaughtExceptionHandler {
 					break;
 				}
 			} else {
-				
+				this.robot.getLCDScreen().printError(ExceptionType.UNKNOWN_EXCEPTION);
+				e.printStackTrace();
 			}
 		} catch (Exception ee) {
 			ee.printStackTrace();

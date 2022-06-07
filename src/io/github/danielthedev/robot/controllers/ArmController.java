@@ -23,7 +23,7 @@ public class ArmController {
 		this.motor.setSpeed(100);
 	}
 	
-	public void preinit() {
+	public void start() {
 		this.retractArm();
 	}
 	
@@ -31,43 +31,44 @@ public class ArmController {
 		this.motor.setState(MotorState.RELEASE);
 	}
 
-	public void extendArm() {
+	public void moveBackward() {
+		this.motor.setState(MotorState.BACKWARD);
+	}
+	
+	public void moveForward() {
 		this.motor.setState(MotorState.FORWARD);
 	}
 	
 	public void retractArm() {
-		this.motor.setState(MotorState.BACKWARD);
-	}
-	
-	public void shutdown() {
-		if(!this.button.isPressedSync()) {
-			this.retractArm();
-			if(!this.button.getState().waitForChange(2000)) {
-				Robot.throwError(ExceptionType.BELT_STUCK);
-			}
+		if(!this.getButton().isPressedSync()) {
+			this.moveBackward();
+			boolean success = this.getButton().getState().waitForChange(Delay.ARM_RETRACT_TIMEOUT);
+			Robot.throwErrorIfNot(!success, ExceptionType.FAILED_ARM_RETRACT);
+			Delay.miliseconds(Delay.ARM_RETRACT_POST_DELAY);
 			this.stop();
 		}
 	}
 	
+	public void extendArm() {
+		if(!this.getButton().isPressedAsync()) {
+			this.retractArm();
+		}
+		this.moveForward();
+		boolean success = this.getButton().getState().waitForChange(Delay.ARM_EXTEND_TIMEOUT);
+		Robot.throwErrorIf(!success || this.getButton().isPressedSync(), ExceptionType.FAILED_ARM_EXTEND);
+		Delay.miliseconds(Delay.ARM_EXTEND_POST_DELAY);
+		this.stop();
+	}
+
 	public void grabDisk() {
 		this.extendArm();
-		boolean success = this.getButton().getState().waitForChange(300);
-		if(!success || this.getButton().isPressedSync()) {
-			this.stop();
-			Robot.throwError(ExceptionType.FAILED_ARM_EXTEND);
-		}
-		Delay.miliseconds(350);
-		this.stop();
-		Delay.miliseconds(5000);
+		Delay.miliseconds(Delay.ARM_HOLD_DELAY);
 		this.retractArm();
-		boolean success1 = this.getButton().getState().waitForChange(1000);
-		if(!(success1 && this.getButton().isPressedSync())) {
-			this.stop();
-			Robot.throwError(ExceptionType.FAILED_ARM_RETRACT);
-		} else {
-			Delay.miliseconds(50);
-			this.stop();
-		}
+	}
+
+	public void testArm() {
+		this.extendArm();
+		this.retractArm();
 	}
 
 	public Button getButton() {
