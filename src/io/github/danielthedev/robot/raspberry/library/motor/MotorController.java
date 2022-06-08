@@ -7,9 +7,7 @@ import static io.github.danielthedev.robot.raspberry.PinRegistry.PIN_MC_LATCH;
 
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
-import com.pi4j.library.pigpio.internal.PIGPIO;
 
-import io.github.danielthedev.robot.Robot;
 import io.github.danielthedev.robot.raspberry.PinFactory;
 import io.github.danielthedev.robot.util.Delay;
 
@@ -70,7 +68,6 @@ public class MotorController {
 	public void setLatchState(int latchState) {
 		this.latchState = latchState;
 		this.latch();
-		Robot.LOGGER.debug("Latch: "+latchState);
 	}
 
 	public DigitalOutput getLatchPin() {

@@ -1,5 +1,6 @@
 package io.github.danielthedev.robot;
 
+
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 
@@ -11,11 +12,11 @@ public class Main {
     		pi4j = Pi4J.newAutoContext();
     		Robot robot = new Robot(pi4j);
     		robot.start();
-    		robot.stop();
 		} finally {
-			if(pi4j != null) {
+			/*if(pi4j != null) {
+				System.out.println("here");
 				pi4j.shutdown();
-			}
+			}*/
 		}       
     }
 

@@ -1,6 +1,8 @@
 #include <TimerOne.h>
 #include <Wire.h>
 
+#define echoPin 8
+#define trigPin 9
 #define S0 3
 #define S1 4
 #define S2 5
@@ -9,6 +11,7 @@
 #define LED 7
 #define DEVICE_ID 0x08
 
+int distance = 0;
 int g_count = 0; // count the frequency
 int g_array[3]; // store the RGB value
 int g_flag = 0; // filter of RGB queue
@@ -21,6 +24,7 @@ void requestEvent() {
   for (int i = 0; i < 3; i++) {
     writeShort(int(g_array[i] * g_SF[i]));
   }
+  writeShort(distance);
 }
 
 void writeShort(int val) {
@@ -93,6 +97,8 @@ void TSC_WB(int Level0, int Level1) //White Balance
 }
 void setup() {
   Serial.begin(9600);
+  pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
+  pinMode(echoPin, INPUT);
   Wire.begin(DEVICE_ID); 
   Wire.onRequest(requestEvent);
   TSC_Init();
@@ -108,5 +114,20 @@ void setup() {
 }
 void loop() {
   g_flag = 0;
-  delay(2000);  
+  delay(500);
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  int duration = pulseIn(echoPin, HIGH);
+  // Calculating the distance
+  distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+  // Displays the distance on the Serial Monitor
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
 }

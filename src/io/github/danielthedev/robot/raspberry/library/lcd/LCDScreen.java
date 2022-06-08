@@ -3,8 +3,10 @@ package io.github.danielthedev.robot.raspberry.library.lcd;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 
-import io.github.danielthedev.robot.raspberry.Pin;
+import io.github.danielthedev.robot.ExceptionType;
 import io.github.danielthedev.robot.raspberry.PinFactory;
+import io.github.danielthedev.robot.raspberry.PinRegistry;
+import io.github.danielthedev.robot.sequence.SequenceType;
 import io.github.danielthedev.robot.util.Delay;
 
 public class LCDScreen {
@@ -60,17 +62,17 @@ public class LCDScreen {
 	private int numlines;
 	private int[] row_offsets = new int[4];
 
-	public LCDScreen(Context context, Pin rs, Pin enable, Pin d0, Pin d1, Pin d2, Pin d3) {
-		this.rs_pin = PinFactory.createOutputPin(context, rs, "LCD");
-		this.enable_pin = PinFactory.createOutputPin(context, enable, "LCD");
-		this.data_pins[0] = PinFactory.createOutputPin(context, d0, "LCD");
-		this.data_pins[1] = PinFactory.createOutputPin(context, d1, "LCD");
-		this.data_pins[2] = PinFactory.createOutputPin(context, d2, "LCD");
-		this.data_pins[3] = PinFactory.createOutputPin(context, d3, "LCD");
+	public LCDScreen(Context context) {
+		this.rs_pin = PinFactory.createOutputPin(context, PinRegistry.PIN_LCD_RS, "LCD");
+		this.enable_pin = PinFactory.createOutputPin(context, PinRegistry.PIN_LCD_ENABLE, "LCD");
+		this.data_pins[0] = PinFactory.createOutputPin(context, PinRegistry.PIN_LCD_D4, "LCD");
+		this.data_pins[1] = PinFactory.createOutputPin(context, PinRegistry.PIN_LCD_D5, "LCD");
+		this.data_pins[2] = PinFactory.createOutputPin(context, PinRegistry.PIN_LCD_D6, "LCD");
+		this.data_pins[3] = PinFactory.createOutputPin(context, PinRegistry.PIN_LCD_D7, "LCD");
 
 		this.displayfunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
 
-		this.begin(16, 1, 0);
+		this.begin(16, 2, 0);
 	}
 
 	public void begin(int cols, int lines, int dotsize) {
@@ -164,6 +166,28 @@ public class LCDScreen {
 	public boolean write(int value) {
 		this.send(value, HIGH);
 		return true;
+	}
+	
+	public void printState(SequenceType type, String status) {
+		this.clear();
+		this.printLine("State: " + type.getStatus(), 0);
+		this.printLine(status, 1);
+	}
+	
+	public void printError(ExceptionType exceptionType) {
+		this.clear();
+		this.print(String.format("Error %d: %s", exceptionType.getId(), exceptionType.getDescription()));
+	}
+	
+	public void printLine(String s, int line) {
+		this.setCursor(0, line);
+		for(int x = 0; x < 16; x++) {
+			if(x > s.length()-1) {
+				this.write(' ');
+			} else {
+				this.write(s.charAt(x));
+			}
+		}
 	}
 	
 	public void print(String s) {
