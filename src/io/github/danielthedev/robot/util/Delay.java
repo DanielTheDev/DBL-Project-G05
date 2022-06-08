@@ -7,15 +7,18 @@ import io.github.danielthedev.robot.sequence.SequenceType;
 
 public class Delay extends SequenceFunction {
 
-	public static final int CONVEYER_BELT_TIMEOUT = 1600;
-	public static final int ARM_RETRACT_TIMEOUT = 1000;
-	public static final int ARM_EXTEND_TIMEOUT = 300;
-	public static final int ARM_HOLD_DELAY = 5000;
-	public static final int ARM_RETRACT_POST_DELAY = 50;
-	public static final int ARM_EXTEND_POST_DELAY = 350;
-	public static final int ARM_GRAB_DELAY = 4000;
-	public static final int CONVEYER_BELT_MOVE_DELAY = 1000;
 	
+	public static final int ARM_RETRACT_TIMEOUT = 1000;
+	public static final int ARM_RETRACT_POST_DELAY = 50;
+	public static final int ARM_EXTEND_TIMEOUT = 300;
+	public static final int ARM_EXTEND_POST_DELAY = 350;
+	public static final int ARM_HOLD_DELAY = 5000;
+	public static final int ARM_GRAB_DELAY = 4000;
+	
+	public static final int DISK_READ_DELAY = 2000;
+	
+	public static final int CONVEYER_BELT_MOVE_DELAY = 1000;
+	public static final int CONVEYER_BELT_TIMEOUT = 1600;
 	public static final int BLACK_DISK_MOVE_DELAY = 2000;
 	public static final int WHITE_DISK_MOVE_DELAY = 1000;
 

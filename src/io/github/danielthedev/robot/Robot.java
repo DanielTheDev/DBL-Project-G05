@@ -49,8 +49,16 @@ public class Robot {
 	}
 	
 	public void stop() {
+		this.armController.stop();
+		this.beltController.stop();
+	}
+	
+	public void shutdown() {
 		Robot.LOGGER.info("Shutting down robot");
 		this.runSequence(SequenceType.SHUTDOWN);
+		for(int x = 0; x < 3; x++) {
+			this.lcdScreen.print(String.format("Robot shutdown in %s second(s)", 3-x));
+		}
 		this.sequenceList.reset();
 		this.arduino.stop();
 		this.lcdScreen.clear();

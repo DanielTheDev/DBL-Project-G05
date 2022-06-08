@@ -12,8 +12,6 @@ public class Main {
     		pi4j = Pi4J.newAutoContext();
     		Robot robot = new Robot(pi4j);
     		robot.start();
-    		System.out.println("here");
-    		robot.stop();
 		} finally {
 			/*if(pi4j != null) {
 				System.out.println("here");

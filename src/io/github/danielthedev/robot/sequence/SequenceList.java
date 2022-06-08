@@ -18,7 +18,7 @@ public class SequenceList {
 		this.sequenceIndex = index;
 		SequenceFunction sequenceItem = this.sequenceList.get(this.sequenceIndex);
 		robot.getLCDScreen().printState(sequenceType, sequenceItem.getName());
-		Robot.LOGGER.info("Starting sequence " + sequenceItem.getName());
+		Robot.LOGGER.debug("Starting sequence " + sequenceItem.getName());
 		sequenceItem.callFunction(robot);
 		this.sequenceIndex++;
 		return true;
@@ -36,7 +36,6 @@ public class SequenceList {
 				}
 			}
 		}
-
 		return -1;
 	}
 
@@ -50,13 +49,11 @@ public class SequenceList {
 		this.reset();
 		this.sequenceList.add(new SequenceFunction(SequenceType.STARTUP, "Testing Arm", r.getArmController()::testArm));
 		this.sequenceList.add(new SequenceFunction(SequenceType.STARTUP, "Testing Conveyer", r.getBeltController()::testBelt));
-		
 		this.sequenceList.add(new SequenceFunction(SequenceType.RUNTIME, "Detecting Disk", r.getArduino()::detectDisk));
 		this.sequenceList.add(new Delay(SequenceType.RUNTIME, Delay.ARM_GRAB_DELAY));
 		this.sequenceList.add(new SequenceFunction(SequenceType.RUNTIME, "Grabbing Disk", r.getArmController()::grabDisk));
 		this.sequenceList.add(new Delay(SequenceType.RUNTIME, Delay.CONVEYER_BELT_MOVE_DELAY));
 		this.sequenceList.add(new SequenceFunction(SequenceType.RUNTIME, "Moving item", r.getBeltController()::moveItem));
-		
 		this.sequenceList.add(new SequenceFunction(SequenceType.SHUTDOWN, "Stopping belt", r.getBeltController()::stop));
 		this.sequenceList.add(new SequenceFunction(SequenceType.SHUTDOWN, "Retracting arm", r.getArmController()::retractArm));
 	}
