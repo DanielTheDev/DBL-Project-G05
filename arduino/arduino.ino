@@ -1,8 +1,8 @@
 #include <TimerOne.h>
 #include <Wire.h>
 
-#define echoPin 8
-#define trigPin 9
+#define ECHO 8
+#define TRIGGER 9
 #define S0 3
 #define S1 4
 #define S2 5
@@ -12,12 +12,11 @@
 #define DEVICE_ID 0x08
 
 int distance = 0;
-int g_count = 0; // count the frequency
-int g_array[3]; // store the RGB value
-int g_flag = 0; // filter of RGB queue
-float g_SF[3]; // save the RGB Scale factor
+int g_count = 0;
+int g_array[3];
+int g_flag = 0;
+float g_SF[3];
 int randomInt = 0;
-// Init TSC230 and setting Frequency.
 
 void requestEvent() {
   writeShort(randomInt);
@@ -40,9 +39,9 @@ void TSC_Init() {
   pinMode(S3, OUTPUT);
   pinMode(OUT, INPUT);
   pinMode(LED, OUTPUT);
-  digitalWrite(S0, LOW); // OUTPUT FREQUENCY SCALING 2%
+  digitalWrite(S0, LOW);
   digitalWrite(S1, HIGH);
-  digitalWrite(LED,LOW); // LOW = Switch ON the 4 LED's , HIGH = switch off the 4 LED's
+  digitalWrite(LED,LOW);
 }
 // Select the filter color//
 void TSC_FilterColor(int Level01, int Level02) {
@@ -97,14 +96,14 @@ void TSC_WB(int Level0, int Level1) //White Balance
 }
 void setup() {
   Serial.begin(9600);
-  pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
-  pinMode(echoPin, INPUT);
+  pinMode(TRIGGER, OUTPUT);
+  pinMode(ECHO, INPUT);
   Wire.begin(DEVICE_ID); 
   Wire.onRequest(requestEvent);
   TSC_Init();
   delay(100);
   delay(100);
-  Timer1.initialize(); // defaulte is 1s
+  Timer1.initialize();
   Timer1.attachInterrupt(TSC_Callback);
   attachInterrupt(0, TSC_Count, RISING);
   delay(4000);
@@ -115,19 +114,11 @@ void setup() {
 void loop() {
   g_flag = 0;
   delay(500);
-  digitalWrite(trigPin, LOW);
+  digitalWrite(TRIGGER, LOW);
   delayMicroseconds(2);
-  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
-  digitalWrite(trigPin, HIGH);
+  digitalWrite(TRIGGER, HIGH);
   delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  // Reads the echoPin, returns the sound wave travel time in microseconds
-  int duration = pulseIn(echoPin, HIGH);
-  // Calculating the distance
-  distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
-  // Displays the distance on the Serial Monitor
-  Serial.print("Distance: ");
-  Serial.print(distance);
-  Serial.println(" cm");
-
+  digitalWrite(TRIGGER, LOW);
+  int duration = pulseIn(ECHO, HIGH);
+  distance = duration * 0.034 / 2;
 }
