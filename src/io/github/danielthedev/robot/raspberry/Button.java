@@ -42,7 +42,6 @@ public class Button implements DigitalStateChangeListener {
 	public void waitForSyncClick() {
 		while(this.isPressedSync()) {};
 		while(!this.isPressedSync()) {};
-		while(this.isPressedSync()) {};
 	}
 	
 	@Override

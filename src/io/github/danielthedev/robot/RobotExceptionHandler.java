@@ -25,10 +25,6 @@ public class RobotExceptionHandler implements UncaughtExceptionHandler {
 	@Override
 	public void uncaughtException(Thread thread, Throwable e) {
 		this.robot.stop();
-		this.robot.getBeeper().beep(150);
-		Delay.miliseconds(50);
-		this.robot.getBeeper().beep(150);
-		
 		ExceptionType type;
 		if(e instanceof RobotException) {
 			RobotException exception = (RobotException) e;
@@ -37,6 +33,22 @@ public class RobotExceptionHandler implements UncaughtExceptionHandler {
 			type = ExceptionType.UNKNOWN_EXCEPTION;
 			Robot.LOGGER.catching(e);
 		}
+		if(type != ExceptionType.INTERUPT_RESET_EXCEPTION) {
+			this.robot.getBeeper().beep(150);
+			Delay.miliseconds(50);
+			this.robot.getBeeper().beep(150);
+		} else {
+			this.robot.getBeeper().beep(250);
+			Delay.miliseconds(50);
+			this.robot.getBeeper().beep(100);
+			Delay.miliseconds(50);
+			this.robot.getBeeper().beep(100);
+			this.robot.getLCDScreen().print("Reset initialized");
+			Delay.miliseconds(2000);
+			this.robot.shutdown();
+			return;
+		}
+		
 		
 		this.robot.getLCDScreen().printError(type);
 		boolean recovered = false;
@@ -75,7 +87,6 @@ public class RobotExceptionHandler implements UncaughtExceptionHandler {
 			Robot.LOGGER.catching(e);
 			break;
 		case INTERUPT_RESET_EXCEPTION:
-			this.robot.shutdown();
 			break;
 		default:
 			break;
