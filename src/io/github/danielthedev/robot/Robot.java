@@ -4,21 +4,31 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.pi4j.context.Context;
+import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.io.gpio.digital.DigitalState;
+import com.pi4j.io.gpio.digital.DigitalStateChangeEvent;
+import com.pi4j.io.gpio.digital.DigitalStateChangeListener;
+import com.pi4j.io.gpio.digital.PullResistance;
 
 import io.github.danielthedev.robot.controllers.ArmController;
 import io.github.danielthedev.robot.controllers.BeltController;
 import io.github.danielthedev.robot.raspberry.Beeper;
+import io.github.danielthedev.robot.raspberry.Button;
+import io.github.danielthedev.robot.raspberry.PinFactory;
+import io.github.danielthedev.robot.raspberry.PinRegistry;
 import io.github.danielthedev.robot.raspberry.library.arduino.Arduino;
 import io.github.danielthedev.robot.raspberry.library.lcd.LCDScreen;
 import io.github.danielthedev.robot.raspberry.library.motor.MotorController;
 import io.github.danielthedev.robot.sequence.SequenceList;
 import io.github.danielthedev.robot.sequence.SequenceType;
+import io.github.danielthedev.robot.util.Delay;
 
 public class Robot {
 
 	public static final Logger LOGGER = LogManager.getLogger(Robot.class);
 	public static final String MAIN_THREAD = "robot-thread";
-		
+	
+	private final Button resetButton;
 	private final Beeper beeper;
 	private final LCDScreen lcdScreen;
 	private final ArmController armController;
@@ -27,10 +37,11 @@ public class Robot {
 	private final RobotExceptionHandler exceptionHandler;
 	private final MotorController motorController;
 	private final SequenceList sequenceList = new SequenceList();
+	private final Runnable shutdownListener;
 	
 	private SequenceType sequenceType; 
 	
-	public Robot(Context context) {
+	public Robot(Context context, Runnable shutdownListener) {
 		Thread.currentThread().setName(MAIN_THREAD);
 		this.motorController = new MotorController(context);
 		this.armController = new ArmController(context, motorController);
@@ -40,12 +51,26 @@ public class Robot {
 		this.lcdScreen = new LCDScreen(context);
 		this.sequenceList.registerSequences(this);
 		this.beeper = new Beeper(context);
+		this.shutdownListener = shutdownListener;
+    	this.resetButton = new Button(context, PinRegistry.RESET_BUTTON);
 	}
 	
 	public void start() {
 		this.exceptionHandler.startListening();
+		this.resetButton.setASyncButtonListener(s->{
+			if(s == DigitalState.HIGH) {
+				this.resetButton.removeListener();
+				this.reset();
+			}
+		});
 		this.preinit();
 		this.init();
+	}
+	
+	public void reset() {
+		if(!Robot.isMainThread()) {
+			Delay.intercept();
+		}
 	}
 	
 	public void stop() {
@@ -63,6 +88,7 @@ public class Robot {
 		this.arduino.stop();
 		this.lcdScreen.clear();
 		this.motorController.disable();
+		this.shutdownListener.run();
 	}
 	
 	public void preinit() {
@@ -99,6 +125,10 @@ public class Robot {
 		if(isMainThread()) {
 			Thread.currentThread().setUncaughtExceptionHandler(this.exceptionHandler);
 		}
+	}
+	
+	public Button getResetButton() {
+		return resetButton;
 	}
 	
 	public LCDScreen getLCDScreen() {

@@ -14,11 +14,20 @@ public class Button implements DigitalStateChangeListener {
 
 	private final DigitalInput button;
 	private final SyncVariable<Boolean> state;
+	private ASyncButtonListener listener;
 	
 	public Button(Context context, Pin pin) {
 		this.button = PinFactory.createInputPin(context, pin, "btn", PullResistance.PULL_UP);
 		this.state = new SyncVariable<Boolean>(this.button.isHigh());
 		this.button.addListener(this);
+	}
+	
+	public void setASyncButtonListener(ASyncButtonListener listener) {
+		this.listener = listener;
+	}
+	
+	public void removeListener() { 
+		this.listener = null;
 	}
 	
 	public boolean isPressedSync() {
@@ -29,13 +38,28 @@ public class Button implements DigitalStateChangeListener {
 	public boolean isPressedAsync() {
 		return this.button.isHigh();
 	}
-
+	
+	public void waitForSyncClick() {
+		while(this.isPressedSync()) {};
+		while(!this.isPressedSync()) {};
+		while(this.isPressedSync()) {};
+	}
+	
 	@Override
 	public void onDigitalStateChange(DigitalStateChangeEvent e) {
 		this.state.putSync(e.state() == DigitalState.HIGH);
+		if(this.listener != null) {
+			this.listener.onStateChange(e.state());
+		}
 	}
 
 	public SyncVariable<Boolean> getState() {
 		return state;
+	}
+	
+	public static interface ASyncButtonListener {
+		
+		void onStateChange(DigitalState state);
+		
 	}
 }

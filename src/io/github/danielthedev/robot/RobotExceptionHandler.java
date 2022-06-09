@@ -17,7 +17,8 @@ public class RobotExceptionHandler implements UncaughtExceptionHandler {
 			Robot.LOGGER.info("Started exception listener");
 			Thread.currentThread().setUncaughtExceptionHandler(this);
 		} else {
-			//Robot.forceShutdown();
+			Robot.LOGGER.fatal("Robot could not set exceptionListener");
+			System.exit(1);
 		}
 	}
 	
@@ -27,56 +28,67 @@ public class RobotExceptionHandler implements UncaughtExceptionHandler {
 		this.robot.getBeeper().beep(150);
 		Delay.miliseconds(50);
 		this.robot.getBeeper().beep(150);
-		try {
-			if(e instanceof RobotException) {
-				RobotException exception = (RobotException) e;
-				ExceptionType type = ExceptionType.getById(exception.getId());
-				this.robot.getLCDScreen().printError(type);
-				boolean recovered = false;
-				switch (ExceptionType.getById(exception.getId())) {
-				case BELT_STUCK:
-					for(int x = 0; x < 3; x++) {
-						boolean success = true;
-						try {
-							this.robot.getBeltController().moveLeft();
-							this.robot.getBeltController().moveRight();
-						} catch (Exception ee) {
-							success = false;
-						}
-						if(success) {
-							recovered = true;
-							break;
-						}
-					}
-					break;
-				case FAILED_ARM_EXTEND:
-					break;
-				case FAILED_ARM_RETRACT:
-					break;
-				case FAILING_ARDUINO_SENSOR:
-					this.robot.shutdown();
-					break;
-				case NOT_MAIN_THREAD:
-					this.robot.shutdown();
+		
+		ExceptionType type;
+		if(e instanceof RobotException) {
+			RobotException exception = (RobotException) e;
+			type = ExceptionType.getById(exception.getId());
+		} else {
+			type = ExceptionType.UNKNOWN_EXCEPTION;
+			Robot.LOGGER.catching(e);
+		}
+		
+		this.robot.getLCDScreen().printError(type);
+		boolean recovered = false;
+		switch (type) {
+		case BELT_STUCK:
+			for(int x = 0; x < 3; x++) {
+				boolean success = true;
+				try {
+					this.robot.getBeltController().moveLeft();
+					this.robot.getBeltController().moveRight();
+				} catch (Exception ee) {
+					success = false;
+				}
+				if(success) {
+					recovered = true;
 					break;
 				}
-				
-				if(recovered) {
-					this.robot.getLCDScreen().print("Successfully recovered robot");
-					Delay.miliseconds(2000);
-					this.robot.continueExecution();
-				} else {
-					this.robot.getLCDScreen().print("Failed to recover robot");
-					Delay.miliseconds(2000);
-					this.robot.shutdown();
-				}
-			} else {
-				this.robot.getLCDScreen().printError(ExceptionType.UNKNOWN_EXCEPTION);
-				this.robot.shutdown();
-				e.printStackTrace();
 			}
-		} catch (Exception ee) {
-			ee.printStackTrace();
+			break;
+		case FAILED_ARM_EXTEND: case FAILED_ARM_RETRACT:
+			for(int x = 0; x < 3; x++) {
+				boolean success = true;
+				try {
+					this.robot.getArmController().extendArm();
+					this.robot.getArmController().retractArm();
+				} catch (Exception ee) {
+					success = false;
+				}
+				if(success) {
+					recovered = true;
+					break;
+				}
+			}
+			break;
+		case NOT_MAIN_THREAD: case UNKNOWN_EXCEPTION: case FAILING_ARDUINO_SENSOR:
+			Robot.LOGGER.catching(e);
+			break;
+		case INTERUPT_RESET_EXCEPTION:
+			this.robot.shutdown();
+			break;
+		default:
+			break;
+		}
+		
+		if(recovered) {
+			this.robot.getLCDScreen().print("Successfully recovered robot");
+			Delay.miliseconds(2000);
+			this.robot.continueExecution();
+		} else {
+			this.robot.getLCDScreen().print("Failed to recover robot");
+			Delay.miliseconds(2000);
+			this.robot.shutdown();
 		}
 	}
 

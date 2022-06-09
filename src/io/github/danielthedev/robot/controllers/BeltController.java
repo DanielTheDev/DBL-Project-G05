@@ -48,9 +48,10 @@ public class BeltController {
 	}
 	
 	public void testBelt() {
-		this.motor.setState(MotorState.FORWARD);
-		Robot.throwErrorIfNot(this.getButton().getState().waitForChange(Delay.CONVEYER_BELT_TIMEOUT), ExceptionType.BELT_STUCK);
 		this.motor.setState(MotorState.BACKWARD);
+		Robot.throwErrorIfNot(this.getButton().getState().waitForChange(Delay.CONVEYER_BELT_TIMEOUT), ExceptionType.BELT_STUCK);
+		Delay.miliseconds(1000);
+		this.motor.setState(MotorState.FORWARD);
 		Robot.throwErrorIfNot(this.getButton().getState().waitForChange(Delay.CONVEYER_BELT_TIMEOUT), ExceptionType.BELT_STUCK);
 		this.stop();
 	}

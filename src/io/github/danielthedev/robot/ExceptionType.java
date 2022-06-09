@@ -7,7 +7,8 @@ public enum ExceptionType {
 	FAILING_ARDUINO_SENSOR(0x03, "Arduino sensor failed"),
 	FAILED_ARM_EXTEND(0x04, "Arm could not extend"),
 	FAILED_ARM_RETRACT(0x05, "Arm could not retract"),
-	UNKNOWN_EXCEPTION(0x05, "Robot cannot continue");
+	UNKNOWN_EXCEPTION(0x05, "Robot cannot continue"),
+	INTERUPT_RESET_EXCEPTION(0x06, "Robot will reset");
 	
 	private final int id;
 	private final String description;

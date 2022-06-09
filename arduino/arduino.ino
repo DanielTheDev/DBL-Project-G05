@@ -107,9 +107,9 @@ void setup() {
   Timer1.attachInterrupt(TSC_Callback);
   attachInterrupt(0, TSC_Count, RISING);
   delay(4000);
-  g_SF[0] = 255.0 / g_array[0]; //R Scale factor
-  g_SF[1] = 255.0 / g_array[1]; //G Scale factor
-  g_SF[2] = 255.0 / g_array[2]; //B Scale factor
+  g_SF[0] = 255.0 / g_array[0];
+  g_SF[1] = 255.0 / g_array[1];
+  g_SF[2] = 255.0 / g_array[2];
 }
 void loop() {
   g_flag = 0;
@@ -120,5 +120,6 @@ void loop() {
   delayMicroseconds(10);
   digitalWrite(TRIGGER, LOW);
   int duration = pulseIn(ECHO, HIGH);
-  distance = duration * 0.034 / 2;
+  distance = (duration * 0.034 / 2)*10;
+  Serial.println(distance);
 }

@@ -43,7 +43,7 @@ public class ArmController {
 		if(!this.getButton().isPressedSync()) {
 			this.moveBackward();
 			boolean success = this.getButton().getState().waitForChange(Delay.ARM_RETRACT_TIMEOUT);
-			Robot.throwErrorIfNot(!success, ExceptionType.FAILED_ARM_RETRACT);
+			Robot.throwErrorIfNot(success, ExceptionType.FAILED_ARM_RETRACT);
 			Delay.miliseconds(Delay.ARM_RETRACT_POST_DELAY);
 			this.stop();
 		}
