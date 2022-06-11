@@ -131,18 +131,17 @@ public class LCDScreen {
 		this.command(LCD_ENTRYMODESET | displaymode);
 
 	}
-	
-	public void setCursor(int col, int row)
-	{
-	  int max_lines = row_offsets.length;
-	  if ( row >= max_lines ) {
-	    row = max_lines - 1;    // we count rows starting w/ 0
-	  }
-	  if ( row >= numlines ) {
-	    row = numlines - 1;    // we count rows starting w/ 0
-	  }
-	  
-	  this.command(LCD_SETDDRAMADDR | (col + this.row_offsets[row]));
+
+	public void setCursor(int col, int row) {
+		int max_lines = row_offsets.length;
+		if (row >= max_lines) {
+			row = max_lines - 1; // we count rows starting w/ 0
+		}
+		if (row >= numlines) {
+			row = numlines - 1; // we count rows starting w/ 0
+		}
+
+		this.command(LCD_SETDDRAMADDR | (col + this.row_offsets[row]));
 	}
 
 	public void setRowOffsets(int row0, int row1, int row2, int row3) {
@@ -157,7 +156,6 @@ public class LCDScreen {
 		Delay.microseconds(2000); // this command takes a long time!
 	}
 
-
 	public void home() {
 		this.command(LCD_RETURNHOME); // set cursor position to zero
 		Delay.microseconds(2000); // this command takes a long time!
@@ -167,40 +165,48 @@ public class LCDScreen {
 		this.send(value, HIGH);
 		return true;
 	}
-	
+
 	public void printState(SequenceType type, String status) {
 		this.clear();
 		this.printLine("State: " + type.getStatus(), 0);
 		this.printLine(status, 1);
 	}
-	
+
 	public void printError(ExceptionType exceptionType) {
 		this.clear();
 		this.print(String.format("Error %d: %s", exceptionType.getId(), exceptionType.getDescription()));
 	}
-	
+
 	public void printLine(String s, int line) {
 		this.setCursor(0, line);
-		for(int x = 0; x < 16; x++) {
-			if(x > s.length()-1) {
+		for (int x = 0; x < 16; x++) {
+			if (x > s.length() - 1) {
 				this.write(' ');
 			} else {
 				this.write(s.charAt(x));
 			}
 		}
 	}
-	
+
+	public void print(String... s) {
+		this.clear();
+		for (int x = 0; x < s.length; x++) {
+			this.printLine(s[x], x);
+		}
+	}
+
 	public void print(String s) {
-		for(int x = 0; x < s.length(); x++) {
-			if(x == 16) {
+		this.clear();
+		for (int x = 0; x < s.length(); x++) {
+			if (x == 16) {
 				this.setCursor(0, 1);
 			}
-			if(x == 32) {
+			if (x == 32) {
 				break;
-			} 
+			}
 			this.write(s.charAt(x));
 		}
-		
+
 	}
 
 	// Turns the underline cursor on/off

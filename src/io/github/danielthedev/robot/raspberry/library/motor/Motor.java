@@ -10,42 +10,42 @@ import io.github.danielthedev.robot.raspberry.PinFactory;
 public class Motor {
 
 	public static final int FREQUENCEY = 39000;
-	
+
 	private final MotorType type;
-	private final MotorController controller; 
+	private final MotorController controller;
 	private final Pwm pwmPin;
 	private MotorState state;
 	private int speed;
-	
+
 	public Motor(Context context, MotorController controller, MotorType type, Pin pwnPin) {
 		this.type = type;
 		this.controller = controller;
 		this.pwmPin = PinFactory.createPWMPin(context, pwnPin, "Motor", FREQUENCEY);
 		this.controller.enable();
 	}
-	
+
 	public void setState(MotorState state) {
 		int latchState = this.controller.getLatchState();
-		
-		if(state.isForward()) {
+
+		if (state.isForward()) {
 			latchState |= (0b00000001 << this.type.getMotorBitPosForward());
 		} else {
 			latchState &= ~(0b00000001 << this.type.getMotorBitPosForward());
 		}
-		
-		if(state.isBackward()) {
+
+		if (state.isBackward()) {
 			latchState |= (0b00000001 << this.type.getMotorBitPosBackward());
 		} else {
 			latchState &= ~(0b00000001 << this.type.getMotorBitPosBackward());
 		}
-		
+
 		this.controller.setLatchState(latchState);
 		this.state = state;
 	}
-	
+
 	public void setSpeed(int speed) {
 		Robot.LOGGER.debug("Setting speed to " + speed);
-		if(speed <= 0 && speed > 100) {
+		if (speed <= 0 && speed > 100) {
 			this.pwmPin.off();
 			this.speed = 0;
 		} else {
@@ -57,7 +57,7 @@ public class Motor {
 	public void start() {
 		this.setSpeed(100);
 	}
-	
+
 	public void stop() {
 		this.setSpeed(0);
 	}

@@ -19,72 +19,72 @@ public class Arduino {
 	public Arduino(Context context) {
 		this.channel = PinFactory.createI2CChannel(context, PinRegistry.I2C_BUS, PinRegistry.I2C_DEVICE);
 	}
-	
+
 	public void stop() {
 		try {
-			if(this.channel != null) {
+			if (this.channel != null) {
 				this.channel.close();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}	
-	
-	
+	}
+
 	public void detectDisk(Robot robot) {
 		ArduinoPacket packet;
 		this.detectedDisk = null;
 		do {
 			packet = this.readNextPacket();
-			if(packet.getColor().isNull()) Robot.throwError(ExceptionType.FAILING_ARDUINO_SENSOR);
-			if(packet.getDistance() < 8) {
+			if (packet.getColor().isNull())
+				Robot.throwError(ExceptionType.FAILING_ARDUINO_SENSOR);
+			if (packet.getDistance() < 34) {
+				robot.getLCDScreen().print("Disk detected");
 				Delay.miliseconds(Delay.DISK_READ_DELAY);
-				int iterations = 6;
+				int iterations = 4;
 				int red = 0;
 				int green = 0;
 				int blue = 0;
-				for(int x = 0; x < iterations; x++) {
+				for (int x = 0; x < iterations; x++) {
 					DiskColor color = packet.getColor();
 					red += color.getRed();
 					green += color.getGreen();
 					blue += color.getBlue();
 					packet = this.readNextPacket();
-					if(packet.getColor().isNull()) Robot.throwError(ExceptionType.FAILING_ARDUINO_SENSOR);
+					if (packet.getColor().isNull())
+						Robot.throwError(ExceptionType.FAILING_ARDUINO_SENSOR);
 				}
-				DiskColor color = DiskColor.of(red/iterations, blue/iterations, green/iterations);
+				DiskColor color = DiskColor.of(red / iterations, blue / iterations, green / iterations);
 				this.detectedDisk = DiskType.getDisk(color);
 			}
-		} while(this.detectedDisk == null);
-		robot.getLCDScreen().clear();
-		robot.getLCDScreen().printLine("Disk Detected", 0);
-		robot.getLCDScreen().printLine(String.format("Match %d%% %s", 
-		this.detectedDisk.getColor().getMatchPercentage(packet.getColor()),
-		this.detectedDisk.name()), 1);
+		} while (this.detectedDisk == null);
+		robot.getLCDScreen().print("Disk Detected", String.format("Match %d%% %s",
+				this.detectedDisk.getColor().getMatchPercentage(packet.getColor()), this.detectedDisk.name()));
 	}
-	
+
 	public ArduinoPacket readNextPacket() {
 		ArduinoPacket lastPacket = this.readPacket();
-		while(true) {
+		while (true) {
 			Delay.miliseconds(200);
 			ArduinoPacket packet = this.readPacket();
-			if(packet.isChanged(lastPacket)) return packet;
+			if (packet.isChanged(lastPacket))
+				return packet;
 		}
 	}
-	
-	public ArduinoPacket readPacket() {		
+
+	public ArduinoPacket readPacket() {
 		int size = Short.BYTES;
 		short[] arr = new short[ArduinoPacket.PACKET_SIZE];
-		byte[] bytes = new byte[size*arr.length];
+		byte[] bytes = new byte[size * arr.length];
 		int s = this.channel.read(bytes);
-		if(s == -83) {
+		if (s == -83) {
 			return ArduinoPacket.deseserialize(new short[ArduinoPacket.PACKET_SIZE]);
 		}
-		for(int t = 0; t < arr.length; t++) {
+		for (int t = 0; t < arr.length; t++) {
 			short val = 0;
-			for(int x = 0; x < 2; x++) {
-				val |= (bytes[bytes.length-x-1-(size*t)] & 0xFF) << (8 * x);
+			for (int x = 0; x < 2; x++) {
+				val |= (bytes[bytes.length - x - 1 - (size * t)] & 0xFF) << (8 * x);
 			}
-			arr[arr.length-1-t] = val;
+			arr[arr.length - 1 - t] = val;
 		}
 		return ArduinoPacket.deseserialize(arr);
 	}

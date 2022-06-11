@@ -12,21 +12,21 @@ import io.github.danielthedev.robot.raspberry.library.motor.MotorState;
 import io.github.danielthedev.robot.raspberry.library.motor.MotorType;
 import io.github.danielthedev.robot.util.Delay;
 
-public class ArmController { 
-    
+public class ArmController {
+
 	private final Motor motor;
 	private final Button button;
-	
+
 	public ArmController(Context context, MotorController motorController) {
 		this.motor = new Motor(context, motorController, MotorType.MOTOR_2, PinRegistry.PIN_MOTOR_2);
 		this.button = new Button(context, PinRegistry.PIN_ARM_BUTTON);
 		this.motor.setSpeed(100);
 	}
-	
+
 	public void start() {
 		this.retractArm();
 	}
-	
+
 	public void stop() {
 		this.motor.setState(MotorState.RELEASE);
 	}
@@ -34,13 +34,13 @@ public class ArmController {
 	public void moveBackward() {
 		this.motor.setState(MotorState.BACKWARD);
 	}
-	
+
 	public void moveForward() {
 		this.motor.setState(MotorState.FORWARD);
 	}
-	
+
 	public void retractArm() {
-		if(!this.getButton().isPressedSync()) {
+		if (!this.getButton().isPressedSync()) {
 			this.moveBackward();
 			boolean success = this.getButton().getState().waitForChange(Delay.ARM_RETRACT_TIMEOUT);
 			Robot.throwErrorIfNot(success, ExceptionType.FAILED_ARM_RETRACT);
@@ -48,9 +48,9 @@ public class ArmController {
 			this.stop();
 		}
 	}
-	
+
 	public void extendArm() {
-		if(!this.getButton().isPressedAsync()) {
+		if (!this.getButton().isPressedAsync()) {
 			this.retractArm();
 		}
 		this.moveForward();
@@ -74,5 +74,5 @@ public class ArmController {
 	public Button getButton() {
 		return button;
 	}
-	
+
 }

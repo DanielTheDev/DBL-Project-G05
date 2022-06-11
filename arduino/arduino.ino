@@ -121,5 +121,4 @@ void loop() {
   digitalWrite(TRIGGER, LOW);
   int duration = pulseIn(ECHO, HIGH);
   distance = (duration * 0.034 / 2)*10;
-  Serial.println(distance);
 }

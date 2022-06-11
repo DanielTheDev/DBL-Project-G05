@@ -2,10 +2,8 @@ package io.github.danielthedev.robot.sequence;
 
 public enum SequenceType {
 
-	STARTUP("Starting"),
-	RUNTIME("Running"),
-	SHUTDOWN("Stopping");
-	
+	STARTUP("Starting"), RUNTIME("Running"), SHUTDOWN("Stopping");
+
 	private final String status;
 
 	private SequenceType(String status) {

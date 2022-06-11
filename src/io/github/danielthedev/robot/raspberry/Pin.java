@@ -4,25 +4,25 @@ public class Pin {
 
 	public static final int GPIO_2 = 2;
 	public static final int GPIO_3 = 3;
-	
+
 	public static final int GPIO_4 = 4;
 	public static final int GPIO_5 = 5;
 	public static final int GPIO_6 = 6;
-	
+
 	public static final int GPIO_7 = 5;
 	public static final int GPIO_8 = 6;
-	
+
 	public static final int GPIO_12 = 12;
 	public static final int GPIO_13 = 13;
-	
+
 	public static final int GPIO_14 = 14;
 	public static final int GPIO_15 = 15;
-	
+
 	public static final int GPIO_16 = 16;
 	public static final int GPIO_17 = 17;
 	public static final int GPIO_18 = 18;
 	public static final int GPIO_19 = 19;
-	
+
 	public static final int GPIO_20 = 20;
 	public static final int GPIO_21 = 21;
 	public static final int GPIO_22 = 22;
@@ -31,16 +31,15 @@ public class Pin {
 	public static final int GPIO_25 = 25;
 	public static final int GPIO_26 = 26;
 	public static final int GPIO_27 = 27;
-	
+
 	private final int bcm;
 	private final String name;
 	private final String endpoint;
-	
+
 	public Pin(String name, int bcm) {
 		this(name, bcm, "");
 	}
 
-	
 	public Pin(String name, int bcm, String endpoint) {
 		this.name = name;
 		this.bcm = bcm;
@@ -54,7 +53,7 @@ public class Pin {
 	public String getName() {
 		return name;
 	}
-	
+
 	public String getEndpoint() {
 		return endpoint;
 	}
