@@ -51,11 +51,12 @@ public class Robot {
 	}
 
 	public void start() {
-		this.lcdScreen.print("Hey guys, I am  Henry the racist");
+		this.lcdScreen.print("Hey, I am Henry the biased robot");
 		Delay.miliseconds(3000);
 		this.lcdScreen.print("Press reset", "to continue");
 		this.resetButton.waitForSyncClick();
 		this.exceptionHandler.startListening();
+		
 		this.resetButton.setASyncButtonListener(s -> {
 			if (s == DigitalState.HIGH) {
 				this.resetButton.removeListener();
@@ -77,9 +78,9 @@ public class Robot {
 		this.beltController.stop();
 	}
 
-	public void shutdown() {
+	public void shutdown(boolean force) {
 		Robot.LOGGER.info("Shutting down robot");
-		this.runSequence(SequenceType.SHUTDOWN);
+		if(!force) this.runSequence(SequenceType.SHUTDOWN);
 		for (int x = 0; x < 3; x++) {
 			this.lcdScreen.print(String.format("Robot shutdown in %s second(s)", 3 - x));
 		}
@@ -89,6 +90,7 @@ public class Robot {
 		this.motorController.disable();
 		this.shutdownListener.run();
 	}
+
 
 	public void preinit() {
 		Robot.LOGGER.info("Pre-initializing robot");

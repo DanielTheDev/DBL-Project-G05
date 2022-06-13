@@ -43,6 +43,7 @@ public class Button implements DigitalStateChangeListener {
 		while (this.isPressedSync()) {
 		}
 		;
+
 		while (!this.isPressedSync()) {
 		}
 		;
