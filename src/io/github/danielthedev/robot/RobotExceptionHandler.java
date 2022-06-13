@@ -38,9 +38,9 @@ public class RobotExceptionHandler implements UncaughtExceptionHandler {
 
 		if (type == ExceptionType.INTERUPT_RESET_EXCEPTION) {
 			this.robot.getBeeper().playResetSound();
-			this.robot.getLCDScreen().print("Reset initialized");
+			this.robot.getLCDScreen().print("Reset has been", "initialized");
 			Delay.miliseconds(2000);
-			this.robot.shutdown();
+			this.robot.shutdown(false);
 		} else {
 			this.robot.getBeeper().playErrorSound();
 			this.robot.getLCDScreen().printError(type);
@@ -68,13 +68,13 @@ public class RobotExceptionHandler implements UncaughtExceptionHandler {
 				default:
 					break;
 			}
-			this.robot.getLCDScreen().print(recovered ? "Successfully recovered robot" : "Failed to recover robot");
+			this.robot.getLCDScreen().print(recovered ? new String[] {"Successfully", "recovered robot"} : new String[] {"Failed to", "recover robot"});
 			Delay.miliseconds(2000);
 
 			if (recovered) {
 				this.robot.safeRestartThread(this.robot::continueExecution);
 			} else {
-				this.robot.shutdown();
+				this.robot.shutdown(true);
 			}
 		}
 	}
