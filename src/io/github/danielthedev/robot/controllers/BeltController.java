@@ -31,6 +31,8 @@ public class BeltController {
 		case BLACK:
 			this.moveLeft();
 			break;
+		default:
+			break;
 		}
 	}
 

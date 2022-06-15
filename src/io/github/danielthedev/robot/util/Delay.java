@@ -22,8 +22,10 @@ public class Delay extends SequenceFunction {
 	public static final int CONVEYER_BELT_TIMEOUT = 1600;
 	public static final int BLACK_DISK_MOVE_DELAY = 2500;
 	public static final int WHITE_DISK_MOVE_DELAY = 2000;
+	public static final int DISK_PASS_DELAY = 9000;
 
 	public static final Object INTERCEPTOR = new Object();
+
 	public static boolean INTERCEPT = false;
 
 	public Delay(SequenceType type, long miliseconds) {
