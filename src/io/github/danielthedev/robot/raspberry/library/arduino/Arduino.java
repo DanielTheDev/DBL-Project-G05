@@ -37,7 +37,7 @@ public class Arduino {
 			packet = this.readNextPacket();
 			if (packet.getColor().isNull())
 				Robot.throwError(ExceptionType.FAILING_ARDUINO_SENSOR);
-			if (packet.getDistance() < 34) {
+			if (packet.getDistance() < 40) {
 				robot.getLCDScreen().print("Disk detected");
 				Delay.miliseconds(Delay.DISK_READ_DELAY);
 				int iterations = 4;
@@ -59,6 +59,9 @@ public class Arduino {
 		} while (this.detectedDisk == null);
 		robot.getLCDScreen().print("Disk Detected", String.format("Match %d%% %s",
 				this.detectedDisk.getColor().getMatchPercentage(packet.getColor()), this.detectedDisk.name()));
+		if(!(robot.getArduino().getDetectedDisk() == DiskType.BLACK || robot.getArduino().getDetectedDisk() == DiskType.WHITE)) {
+			Delay.miliseconds(Delay.DISK_PASS_DELAY);
+		}
 	}
 
 	public ArduinoPacket readNextPacket() {

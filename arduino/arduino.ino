@@ -95,7 +95,6 @@ void TSC_WB(int Level0, int Level1) //White Balance
   Timer1.setPeriod(100000);
 }
 void setup() {
-  Serial.begin(9600);
   pinMode(TRIGGER, OUTPUT);
   pinMode(ECHO, INPUT);
   Wire.begin(DEVICE_ID); 

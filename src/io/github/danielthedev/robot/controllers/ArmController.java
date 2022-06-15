@@ -2,6 +2,7 @@ package io.github.danielthedev.robot.controllers;
 
 import com.pi4j.context.Context;
 
+import io.github.danielthedev.robot.DiskType;
 import io.github.danielthedev.robot.ExceptionType;
 import io.github.danielthedev.robot.Robot;
 import io.github.danielthedev.robot.raspberry.Button;
@@ -60,10 +61,12 @@ public class ArmController {
 		this.stop();
 	}
 
-	public void grabDisk() {
-		this.extendArm();
-		Delay.miliseconds(Delay.ARM_HOLD_DELAY);
-		this.retractArm();
+	public void grabDisk(Robot robot) {
+		if(robot.getArduino().getDetectedDisk() == DiskType.BLACK || robot.getArduino().getDetectedDisk() == DiskType.WHITE) {
+			this.extendArm();
+			Delay.miliseconds(Delay.ARM_HOLD_DELAY);
+			this.retractArm();
+		}
 	}
 
 	public void testArm() {
